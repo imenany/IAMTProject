@@ -99,7 +99,7 @@ class ProjectsController extends Controller
         return view('AI_layouts.content.editproject')->with('project',$project)->with('normes',$normes)->with('selectednormes',$selectednormesids);
     }
 
-    public function editPorjectProperties(Request $req)
+    public function updateProjectProperties(Request $req)
     {
         $request = (Object) $req;
         $data = $request->all();
@@ -151,6 +151,8 @@ class ProjectsController extends Controller
         $intervenant = User::find($id);
         return $intervenant;
     }
+
+
 
     /*public function getAssociatedPhaseSteps(Request $req)
     {

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Mail;
 
 class User extends Authenticatable
 {
@@ -27,8 +28,32 @@ class User extends Authenticatable
         'password', 'remember_token','access'
     ];
 
-    public function projects()
+
+    public function pparticipants()
     {
-        return $this->hasMany('App\Project');
+        return $this->hasMany('App\Pparticipant');
     }
+
+
+
+
+
+    public static function generatePassword()
+    {
+      // Generate random string and encrypt it. 
+      return bcrypt(str_random(35));
+    }
+
+    public static function sendWelcomeEmail($user)
+    {
+      // Generate a new reset password token
+      $token = app('auth.password.broker')->createToken($user);
+      
+      // Send email
+      Mail::send('AI_layouts.content.email', ['user' => $user, 'token' => $token], function ($m) use ($user) {
+        $m->from('hello@appsite.com', 'Your App Name');
+        $m->to($user->email, $user->first_name)->subject('Welcome to APP');
+      });
+    }
+
 }

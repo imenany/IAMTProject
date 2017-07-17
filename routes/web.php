@@ -59,6 +59,15 @@ Route::group(['middleware' => 'C_ORG'], function() {
 	Route::get('/newProject', 'ProjectsController@newprojectview');
 	Route::get('/listProjects','ProjectsController@listProjects');
 	Route::get('/editproject/{id}','ProjectsController@editproject');
-	Route::post('/editPorjectProperties','ProjectsController@editPorjectProperties');
+	Route::post('/editPorjectProperties','ProjectsController@updateProjectProperties');
+	Route::post('/saveitRequest','ProjectsController@updateProjectProperties');
+
+	//- Users management Routes
+	Route::get('/listUsers','UsersController@listUsers');
+	Route::get('/viewuser/{id}','UsersController@viewUser');
+	Route::get('/edituser/{id}','UsersController@editUser');
+	Route::post('/saveuserEditRequest','UsersController@updateUserInfo');
+	Route::get('/newUser','UsersController@newUser');
+	Route::post('/saveNewUser','UsersController@saveNewUser');
 });
 

@@ -17,6 +17,71 @@ class NormesTableSeeder extends Seeder
     {
         
 
+
+
+        /*
+        *
+        * EN50126 ******************************* 
+        * 
+        */
+       
+        $norme = new Norme();
+        $norme->name = 'EN50126';
+        $norme->save();
+
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Concept';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'System Definition & Operational Context';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Risk Analysis & Evaluation';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Specification of System Requirements';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Architecture and Apportionment of System Requirements';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Design SW';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Design HW';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Manufacture';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Integration';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'System Validation';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'System Acceptance';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Operation, Maintenance and Performance Monitoring';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
+        $normePhase->name = 'Decommissioning';
+        $normePhase->save();
+
         /*
         *
         * EN50128 ******************************* 
@@ -70,65 +135,6 @@ class NormesTableSeeder extends Seeder
         $normePhase = new NormesPhase();
         $normePhase->norme_id = Norme::where('name','EN50128')->first()->id;
         $normePhase->name = 'Software Maintenance';
-        $normePhase->save();
-
-        /*
-        *
-        * EN50126 ******************************* 
-        * 
-        */
-       
-        $norme = new Norme();
-        $norme->name = 'EN50126';
-        $norme->save();
-
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Concept';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'System Definition & Operational Context';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Risk Analysis & Evaluation';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Specification of System Requirements';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Architecture and Apportionment of System Requirements';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Design and Implementation';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Manufacture';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Integration';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'System Validation';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'System Acceptance';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Operation, Maintenance and Performance Monitoring';
-        $normePhase->save();
-        $normePhase = new NormesPhase();
-        $normePhase->norme_id = Norme::where('name','EN50126')->first()->id;
-        $normePhase->name = 'Decommissioning';
         $normePhase->save();
 
 

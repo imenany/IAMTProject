@@ -25,6 +25,12 @@
           @lang('strings.newProject')
       </button>
     </div>
+
+    <div class="item">
+      <button class="fluid yellow ui button" id="new_user">
+          @lang('strings.newUser')
+      </button>
+    </div>
     
     <!--div class="ui cards">
           <div class="card">

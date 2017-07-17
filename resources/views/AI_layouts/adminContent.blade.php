@@ -25,6 +25,7 @@
 <body>
     @include('AI_layouts._leftmenu_layout')
     @include('AI_layouts._usermenu_layout')
+    @include('AI_layouts._modals_layout')
     @yield('body')    
 
 </body>

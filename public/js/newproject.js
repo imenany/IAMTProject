@@ -127,3 +127,45 @@ $('#dateEnd').calendar({
   startCalendar: $('#dateStart')
 });
 
+$('#Design').checkbox({
+    onChecked: function() {
+      $('#toShow6').show();
+      $('#toShow7').show();
+    },
+    onUnchecked: function() {
+      $('#toShow6').hide();
+      $('#toShow7').hide();
+      $('#phase_6').checkbox('set unchecked');
+      $('#phase_7').checkbox('set unchecked');
+      $('#norme_table').hide();
+      $('#norme_table table tr td').children('.checkbox').each(function(index, el) {
+        $('#'+el.id+'').checkbox('set unchecked');
+      });
+    }
+});
+
+
+$('#phase_6').checkbox({
+  onChecked: function() {
+      $('#norme_table').show();
+    },
+    onUnchecked: function() {
+      $('#norme_table').hide();
+      $('#norme_table table tr td').children('.checkbox').each(function(index, el) {
+        $('#'+el.id+'').checkbox('set unchecked');
+      });
+    }
+});
+
+if($('#phase_6').checkbox('is checked') || $('#phase_7').checkbox('is checked'))
+{
+  $('#Design').checkbox('set checked');
+  $('#toShow6').show();
+  $('#toShow7').show();
+}
+
+if($('#phase_6').checkbox('is checked'))
+{
+  $('#norme_table').show();
+}
+

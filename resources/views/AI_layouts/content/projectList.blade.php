@@ -16,23 +16,23 @@
 	<div class="wide column">
 			<div class="ui" id="loading_files">
 	  		<div class="ui active inverted dimmer">
-	    		<div class="ui text loader">Loading</div>
+	    		<div class="ui text loader">@lang('strings.loading')</div>
 	  		</div>
 	  		<p></p>
 			</div>
 			<table class="ui selectable celled table datatable">
 			  <thead>
 			    <tr>
-				    <th>Title</th>
-				    <th>Description</th>
-				    <th>Date Debut</th>
-				    <th>Date Fin</th>
-				    <th>STD</th>
-				    <th>Progress</th>
-				    <th>C_ORG Baseline</th>
-				    <th>Created At</th>
-				    <th>Updated At</th>
-				    <th>Edit</th>
+				    <th>@lang('strings.title')</th>
+				    <th>@lang('strings.description')</th>
+				    <th>@lang('strings.startDate')</th>
+				    <th>@lang('strings.endDate')</th>
+				    <th>@lang('strings.projSTD')</th>
+				    <th>@lang('strings.progress')</th>
+				    <th>@lang('strings.corgbaseline')</th>
+				    <th>@lang('strings.createdat')</th>
+				    <th>@lang('strings.updatedat')</th>
+				    <th>@lang('strings.edit')</th>
 			  	</tr>
 			  	</thead>
 			  <tbody>

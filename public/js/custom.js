@@ -78,6 +78,10 @@
         location.href = '/newProject';
     });
 
+    $('#new_user').click(function(event) {
+        location.href = '/newUser';
+    });
+
 
     $('.datatable').DataTable({
           "pageLength": 5,

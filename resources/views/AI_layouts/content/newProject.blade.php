@@ -22,37 +22,37 @@
   <div class="active step" id="firsttabtitle">
     <i class="info circle icon"></i>
     <div class="content">
-      <div class="title">Project Information</div>
-      <div class="description">Introduce the project</div>
+      <div class="title">@lang('strings.projInfo')</div>
+      <div class="description">@lang('strings.projInfoDesc')</div>
     </div>
   </div>
   <div class="disabled step" id="secondtabtitle">
     <i class="checkmark icon"></i>
     <div class="content">
-      <div class="title">Standards</div>
-      <div class="description">Select project standards</div>
+      <div class="title">@lang('strings.projSTD')</div>
+      <div class="description">@lang('strings.projSTDDesc')</div>
     </div>
   </div>
   <div class="disabled step" id="thirdtabtitle">
     <i class="users icon"></i>
     <div class="content">
-      <div class="title">Intervenants</div>
-      <div class="description">Select project intervenant</div>
+      <div class="title">@lang('strings.projIntervenants')</div>
+      <div class="description">@lang('strings.projIntervenantsDesc')</div>
     </div>
   </div>
 </div>
 <div class="ui attached segment">
       <div class="" id="firsttab">
-        <h2 class="ui dividing header">Project Information</h2>
+        <h2 class="ui dividing header">@lang('strings.projInfo')</h2>
             <input name="Project[id]" hidden="" value="false">
             <div class="field">
-              <label>Title</label>
+              <label>@lang('strings.title')</label>
               <div class="field">
                   <input name="Project[title]" placeholder="Title" type="text" required="">
               </div>
             </div>
             <div class="field">
-              <label>Description</label>
+              <label>@lang('strings.description')</label>
               <div class="field">
                 <div class="field">
                    <textarea rows="2" name="Project[description]"></textarea>
@@ -61,7 +61,7 @@
             </div>
             <div class="two fields">
               <div class="field">
-                <label>Date début</label>
+                <label>@lang('strings.startDate')</label>
                 <div class="field">
                   <div class="ui calendar" id="dateStart">
                       <div class="ui input left icon">
@@ -72,7 +72,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Date fin</label>
+                <label>@lang('strings.endDate')</label>
                 <div class="field">
                     <div class="ui calendar" id="dateEnd">
                       <div class="ui input left icon">
@@ -83,7 +83,7 @@
                 </div>
               </div>
             </div>
-            <div class="ui red message hidden" id="message">Please fill in all the inputs</div>
+            <div class="ui red message hidden" id="message">@lang('strings.fillAllMessage')</div>
             <div class="ui divider"></div>
               <div class="field">
                 <div class="ui grid">
@@ -92,18 +92,18 @@
                   <div class="ui eight wide column"></div>
                   <div class="ui four wide column">
                     <div class="ui fluid button" tabindex="0" id="Next1">
-                        Next
+                        @lang('strings.next')
                       </div>
                   </div>
                 </div>
               </div>
       </div>
       <div class="hidden" id="secondtab">
-          <h2 class="ui dividing header">Standards</h2>
+          <h2 class="ui dividing header">@lang('strings.projSTD')</h2>
             <div class="field">
               <div class="three fields">
                 @foreach($normes as $norme)
-                <div class="field">
+                <div class="field {!! (strcmp($norme->name,'EN50128')) == 0 ? 'hidden': '' !!}" id="{!! (strcmp($norme->name,'EN50128')) == 0 ? 'norme_table': '' !!}" >
                 <table class="ui celled table">
                   <thead>
                     <tr>
@@ -112,11 +112,25 @@
                   </thead>
                   <tbody>
                     @foreach($norme->normephases as $phase)
-                    <tr>
+                    @if($phase->id == 6)
+                          <tr><td class="fourteen wide"><label>Design and Implementation</label></td>
+                            <td>  
+                              <div class="ui master checkbox" id="Design">
+                                <input type="checkbox">
+                              </div>
+                    </td></tr>
+                    @endif
+                    
+                      @if($phase->id == 6 || $phase->id == 7)
+                      <tr class="hidden" id="toShow{{$phase->id}}">
+                      <td class="ten wide center aligned"><label>{{$phase->name}}</label></td>
+                      @else 
+                      <tr>
                       <td class="fourteen wide"><label>{{$phase->name}}</label></td>
+                      @endif
                       <td>
-                        <div class="ui master checkbox">
-                          <input name="Phase[{{$phase->id}}]" type="checkbox">
+                        <div class="ui master checkbox" id="phase_{{$phase->id}}">
+                          <input name="Phase[{{$phase->id}}]" type="checkbox" >
                         </div>
                       </td>
                     </tr>
@@ -132,14 +146,14 @@
             <div class="ui grid">
               <div class="ui four wide column">
                   <div class="ui fluid button" tabindex="0" data-tabnumber="1" id="Previous1">
-                    Previous
+                    @lang('strings.previous')
                   </div>
               </div>
               <div class="ui eight wide column"></div>
               <div class="ui four wide column">
                 <div class="ui four wide column">
                   <div class="ui fluid button" tabindex="0" data-tabnumber="3" id="Next2">
-                    Next
+                    @lang('strings.next')
                   </div>
               </div>
               </div>
@@ -147,27 +161,26 @@
           </div>
       </div>
       <div class="hidden" id="thirdtab">
-        <h2 class="ui dividing header">Project Intervenants Information</h2>
+        <h2 class="ui dividing header">@lang('strings.projIntervenantsDesc')</h2>
           <table class="ui celled sortable striped fluid table" id="tablesort">
             <thead>
               <tr>
-                <th class="center aligned" rowspan="2" >First Name</th>
-                <th class="center aligned" rowspan="2" >Last Name</th>
-                <th class="center aligned" rowspan="2" >Fonction</th>
-                <th class="center aligned" rowspan="2" >Organisation</th>
-                <th class="center aligned" colspan="9">Role</th>
+                <th class="center aligned" rowspan="2" >@lang('strings.firstname')</th>
+                <th class="center aligned" rowspan="2" >@lang('strings.lastname')</th>
+                <th class="center aligned" rowspan="2" >@lang('strings.fonction')</th>
+                <th class="center aligned" rowspan="2" >@lang('strings.organisation')</th>
+                <th class="center aligned" colspan="8">@lang('strings.role')</th>
               </tr>
-              <tr>
-                <th class="center aligned">Admin</th>
-                <th class="center aligned">Lead Assessor</th>
-                <th class="center aligned">Assessor</th>
-                <th class="center aligned">Project Manager</th>
-                <th class="center aligned">QA</th>
-                <th class="center aligned">Approver</th>
-                <th class="center aligned">Manager</th>
-                <th class="center aligned">Project Participant</th>
-                <th class="center aligned">Guest</th>
-              </tr>
+                  <tr>
+                    <th class="center aligned">@lang('strings.leadassessor')</th>
+                    <th class="center aligned">@lang('strings.assessor')</th>
+                    <th class="center aligned">@lang('strings.projectManager')</th>
+                    <th class="center aligned">@lang('strings.QA')</th>
+                    <th class="center aligned">@lang('strings.approver')</th>
+                    <th class="center aligned">@lang('strings.manager')</th>
+                    <th class="center aligned">@lang('strings.projectparticipant')</th>
+                    <th class="center aligned">@lang('strings.guest')</th>
+                  </tr>
             </thead>
             <tbody>
               @foreach($users as $user)
@@ -176,11 +189,8 @@
                 <td>{{$user->last_name}}</td>
                 <td>{{$user->fonction}}</td>
                 <td>{{$user->organisation}}</td>
-                <td class="center aligned">
-                   <div class="ui radio checkbox">
-                    <input name="role[{{$user->id}}]" tabindex="0" class="hidden" type="radio" value="Admin">
-                   </div>
-                </td>
+                @if($user->fonction == "AI_ORG")
+
                 <td class="center aligned">
                    <div class="ui radio checkbox">
                     <input name="role[{{$user->id}}]" tabindex="0" class="hidden" type="radio" value="Lead Assessor">
@@ -206,6 +216,9 @@
                     <input name="role[{{$user->id}}]" tabindex="0" class="hidden" type="radio" value="Approver">
                    </div>
                 </td>
+                <td colspan="3" class="active"></td>
+                @else
+                <td colspan="5" class="active"></td>
                 <td class="center aligned">
                    <div class="ui radio checkbox">
                     <input name="role[{{$user->id}}]" tabindex="0" class="hidden" type="radio" value="Manager">
@@ -221,6 +234,7 @@
                     <input name="role[{{$user->id}}]" tabindex="0" class="hidden" type="radio" value="Guest">
                    </div>
                 </td>
+                @endif
               </tr>
               @endforeach
             </tbody>
@@ -230,12 +244,12 @@
             <div class="ui grid">
               <div class="ui four wide column">
                   <div class="ui fluid button" tabindex="0" id="Previous2">
-                    Previous
+                    @lang('strings.previous')
                   </div>
               </div>
               <div class="ui eight wide column"></div>
               <div class="ui four wide column">
-                <button class="fluid yellow ui button" type="submit">Create project</button>
+                <button class="fluid yellow ui button" type="submit">@lang('strings.createproject')</button>
               </div>
             </div>
           </div>

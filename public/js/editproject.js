@@ -120,7 +120,6 @@ $('#Next1').click(function() {
     $('#secondtabtitle').removeClass('disabled');
     $('#secondtab').removeClass('hidden');
     $('#firsttab').addClass('hidden');
-
     }
 });
 
@@ -198,21 +197,20 @@ $('#addNew').click(function(event) {
 
 $(document).on('change','#appendable ',function(){
   var x = this.options[this.selectedIndex].value;
-  //console.log(x);
   $(this).closest('tr').remove();
   $('#addNew').removeClass('disabled');
-  $td = '<td class="center aligned"><div class="ui radio checkbox">';
+  $td = '<td class="center aligned iceBG"><div class="ui radio checkbox ">';
+  $AI_ORG = '<td colspan="5" class="active"></td>';
+  $C_ORG = '<td colspan="3" class="active"></td>';
   $.ajax({
             url: '/getIntervenantRequest',
             type: 'GET',
             data: { id : x },
             success: function (data) {
-              //$retour = $.parseJSON(data);
-              $fname = '<tr><td>'+data.first_name+'</td>';
-              $lname = '<td>'+data.last_name+'</td>';
-              $fct = '<td>'+data.fonction+'</td>';
-              $org = '<td>'+data.organisation+'</td>';
-              $inputAdmin = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Admin"></div></td>';
+              $fname = '<tr><td class="iceBG"><b>'+data.first_name+'</b></td>';
+              $lname = '<td class="iceBG"><b>'+data.last_name+'</b></td>';
+              $fct = '<td class="iceBG">'+data.fonction+'</td>';
+              $org = '<td class="iceBG">'+data.organisation+'</td>';
               $inputLA = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Lead Assessor"></div></td>';
               $inputA = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Assessor"></div></td>';
               $inputPM = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Project Manager"></div></td>';
@@ -220,30 +218,81 @@ $(document).on('change','#appendable ',function(){
               $inputApprover = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Approver"></div></td>';
               $inputM = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Manager"></div></td>';
               $inputPP = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Project Participant"></div></td>';
-              $inputG = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Guest"></td></div></tr>';
-              $('tbody').append($fname + $lname + $fct + $org + $inputAdmin + $inputLA + $inputA + $inputPM + $inputQA + $inputApprover + $inputM + $inputPP + $inputG);
+              $inputG = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Guest"></td></div></td>';
+              $delete = '<td class="center aligned iceBG"><div class="ui radio checkbox"><input tabindex="0" class="hidden" type="radio" value="null" name="role['+data.id+']"></div><i class="remove user red icon"></i></td></tr>';
+              
+              
+              if(data.fonction == "AI_ORG")
+                $('tbody').append($fname + $lname + $fct + $org + $inputLA + $inputA + $inputPM + $inputQA + $inputApprover + $C_ORG + $delete);
+              else 
+                $('tbody').append($fname + $lname + $fct + $org + $AI_ORG + $inputM + $inputPP + $inputG + $delete);
+
             }
         }).done(function() {
             $('.ui.radio.checkbox').checkbox();
         })
-        .fail(function() {
-            //console.log("error");
-        })
-        .always(function() {
-            //console.log("complete");
-        });
 
-/*
-  $(this).closest('tr').remove();
-  $('#addNew').removeClass('disabled');
-
-  $fname = '<tr><td>'+this.options[this.selectedIndex].firstname+'</td>';
-  //$td = '<td class="center aligned"><div class="ui radio checkbox">';
-  //$input = '<input name="role['+this.options[this.selectedIndex].value+']" tabindex="0" class="hidden" type="radio" value="Admin">';
-      //</div><div></td>' + $td + $input + '</div></td></tr>');
-  $('tbody').append($fname);
-  */
 
 });
 
-//<div class="item" data-value="jenny" data-text="Jenny"></div>
+
+
+$('.Save').click(function(event) {
+  $('#Saving').show();
+    setTimeout(function() {
+      $('#Saving').fadeOut('fast');
+    }, 300); // <-- time in milliseconds
+    
+    $data = $('#formedit').serialize();
+    $.ajax({
+      url: '/saveitRequest',
+      type: 'POST',
+      data: $('#formedit').serialize(),
+      success: function (data) {
+      }
+    })
+});
+
+
+$('#Design').checkbox({
+    onChecked: function() {
+      $('#toShow6').show();
+      $('#toShow7').show();
+    },
+    onUnchecked: function() {
+      $('#toShow6').hide();
+      $('#toShow7').hide();
+      $('#phase_6').checkbox('set unchecked');
+      $('#phase_7').checkbox('set unchecked');
+      $('#norme_table').hide();
+      $('#norme_table table tr td').children('.checkbox').each(function(index, el) {
+        $('#'+el.id+'').checkbox('set unchecked');
+      });
+    }
+});
+
+
+$('#phase_6').checkbox({
+  onChecked: function() {
+      $('#norme_table').show();
+    },
+    onUnchecked: function() {
+      $('#norme_table').hide();
+      $('#norme_table table tr td').children('.checkbox').each(function(index, el) {
+        $('#'+el.id+'').checkbox('set unchecked');
+      });
+    }
+});
+
+if($('#phase_6').checkbox('is checked') || $('#phase_7').checkbox('is checked'))
+{
+  $('#Design').checkbox('set checked');
+  $('#toShow6').show();
+  $('#toShow7').show();
+}
+
+if($('#phase_6').checkbox('is checked'))
+{
+  $('#norme_table').show();
+}
+
