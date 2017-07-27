@@ -25,19 +25,19 @@
 <body>
     @if(Auth::user()->access == 1)
         
-        @include('C_layouts._leftmenu_layout')
+        @include('C_ORG_layouts._leftmenu_layout')
         @include('C_layouts._usermenu_layout')
         @include('C_layouts._docmanager_layout')
         @include('C_layouts._isa_layout')
         @include('C_layouts._modals_layout')
     
-    @elseif(Auth::user()->access == 2)
+    @elseif(Auth::user()->access == 0)
 
-        @include('AI_layouts._leftmenu_layout')
-        @include('AI_layouts._usermenu_layout')
-        @include('AI_layouts._docmanager_layout')
-        @include('AI_layouts._isa_layout')
-        @include('AI_layouts._modals_layout')
+        @include('Admin_layouts._leftmenu_layout')
+        @include('Admin_layouts._usermenu_layout')
+        @include('Admin_layouts._docmanager_layout')
+        @include('Admin_layouts._isa_layout')
+        @include('Admin_layouts._modals_layout')
 
     @endif
 

@@ -9,26 +9,25 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Http\UploadedFile;
 use App\User;
 use Mail;
-use App\Mail\Mailtrap;
 
 class UsersController extends Controller
 {
     public function listUsers()
     {
         $users = User::all();
-        return view('AI_layouts.content.usersList')->with('users',$users);
+        return view('Admin_layouts.content.usersList')->with('users',$users);
     }
 
     public function viewUser($id)
     {
         $user = User::find($id);
-        return view('AI_layouts.content.viewuser')->with('user',$user);
+        return view('Admin_layouts.content.viewuser')->with('user',$user);
     }
 
     public function editUser($id)
     {
         $user = User::find($id);
-        return view('AI_layouts.content.edituser')->with('user',$user);
+        return view('Admin_layouts.content.edituser')->with('user',$user);
     }
 
     public function updateUserInfo(Request $req)
@@ -77,6 +76,6 @@ class UsersController extends Controller
 
     public function newUser()
     {
-        return view('AI_layouts.content.newuser');
+        return view('Admin_layouts.content.newuser');
     }
 }

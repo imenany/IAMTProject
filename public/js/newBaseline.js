@@ -3,7 +3,8 @@ if($('#updateBaseline').data('exists') == 'opened')
   $('#new_baseline_modal').modal({
       closable  : false,
       onDeny    : function(){
-          history.go(-1);
+          $('#showallBaselines').trigger('click');
+          $('#new_baseline_modal').modal('hide'); 
         return false;
       },
       onApprove : function() {

@@ -13,8 +13,18 @@ class Document extends Model
     }
     */
    
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
    public function baseline()
 	{
         return $this->belongsTo('App\Baseline');
 	}
+
+    public function normesphase()
+    {
+        return $this->belongsTo('App\Normesphase','phase');
+    }
 }

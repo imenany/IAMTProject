@@ -35,7 +35,10 @@ class User extends Authenticatable
     }
 
 
-
+    public function documents()
+    {
+        return $this->hasMany('App\Document');
+    }
 
 
     public static function generatePassword()
@@ -50,7 +53,7 @@ class User extends Authenticatable
       $token = app('auth.password.broker')->createToken($user);
       
       // Send email
-      Mail::send('AI_layouts.content.email', ['user' => $user, 'token' => $token], function ($m) use ($user) {
+      Mail::send('Admin_layouts.content.email', ['user' => $user, 'token' => $token], function ($m) use ($user) {
         $m->from('hello@appsite.com', 'Your App Name');
         $m->to($user->email, $user->first_name)->subject('Welcome to APP');
       });

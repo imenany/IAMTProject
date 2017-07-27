@@ -15,11 +15,13 @@ class CreateDocumentsTable extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
             $table->string('title');
             $table->integer('baseline_id');
             $table->string('phase');
             $table->float('version',3,1);
             $table->string('url');
+            $table->boolean('valid')->default(false);
             $table->timestamps();
         }); 
     }

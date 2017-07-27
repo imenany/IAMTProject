@@ -2,6 +2,39 @@
 
 return [
 
+
+/*
+* Messages
+ */
+
+	'thereisnobaselinemessage' => 'The is no open baseline',
+	'fillAllMessage' => 'Please fill in all the inputs',
+
+/*
+* Findings 
+ */
+	'finding' => 'Finding',
+	'cycle' => 'Cycle',
+	'relatedDoc' => 'Related Document',
+	'recommendation' => 'Recommendation',
+	'status' => 'Status',
+	'severity' => 'Severity',
+	'action' => 'Action',
+	'createdby' => 'Created By',
+	'waitingResponseClient' => 'Waiting for client\'s response',
+	'waitingResponseAssessor' => 'Waiting for assessor\'s response',
+
+/*
+* Documents
+ */
+
+	'uploadBaselineDocs' => 'Upload baseline documents',
+	'validateDoc' => 'Validate project documents',
+	'documents' => 'Documents',
+	'oldDocument' => 'Old document',
+	'newDocument' => 'New document',
+	'document' => 'Document',
+	'browse' => 'Browse',
 /*
 * View user
  */
@@ -16,7 +49,7 @@ return [
 
 	'progress' => 'progress',
 	'corgbaseline' => 'C_ORG Baseline',
-	'createdat' => 'Ceated At',
+	'createdat' => 'Created At',
 	'updatedat' => 'Updated At',
 	'edit' => 'Edit',
 	'loading' => 'Loading',
@@ -38,7 +71,6 @@ return [
 	'description' => 'Description',
 	'startDate' => 'Starts At',
 	'endDate' => 'Ends At',
-	'fillAllMessage' => 'Please fill in all the inputs',
 	'save' => 'Save',
 	'next' => 'Next',
 	'previous' => 'Previous',
@@ -63,10 +95,17 @@ return [
 * Various
  */
 	'project' => 'Project',
-	'document' => 'Document',
 	'users' => 'Users',
 	'editProject' => 'Edit project',
 	'create' => 'Create',
+	'version' => 'Version',
+	'upload' => 'Upload',
+	'lock' => 'lock',
+	'open' => 'open',
+	'close' => 'close',
+	'chat' => 'Project chat',
+	'phase' => 'Phase',
+
 /**
  * _leftmenu_layout.blade.php
  */
@@ -77,7 +116,6 @@ return [
 	'newUser' => 'Create a new user',
 	'notifications' => 'Notifications',
 	'findings' => 'Findings',
-	'documents' => 'Documents',
 	'reviewing' => 'Reviewing',
 
 /**

@@ -17,6 +17,7 @@ class CreateProjectsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('description');
+            $table->string('organisation');
             $table->date('dateDebut');
             $table->date('dateFin');
             $table->float('STD');

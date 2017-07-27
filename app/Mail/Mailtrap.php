@@ -28,6 +28,6 @@ class Mailtrap extends Mailable
      */
     public function build()
     {
-        return $this->view('AI_layouts.content.email');
+        return $this->view('Admin_layouts.content.email');
     }
 }

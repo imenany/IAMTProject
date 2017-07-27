@@ -164,26 +164,20 @@ $('#addNew').click(function(event) {
     $('#addNew').addClass('disabled');
     $tr = '<tr id="newRow">';
     $editable = '<td colspan="4"><div class="editable"><div class="field">'
-    $select = '<select class="ui fluid search dropdown" name="user" id="appendable">';
-    //$td = '<td class="center aligned"><div class="ui radio checkbox">';
-    //$input = '<input name="role[]" tabindex="0" class="hidden" type="radio" value="Admin">';
-      //</div><div></td>' + $td + $input + '</div></td></tr>');
+    $select = '<select class="ui fluid search dropdown" name="user" id="appendable"><option value="" ">Select intervenant</option>';
     $id = $('#projectid').val();
-    console.log($id);
-    //$('.editable').html('<input type="text">');
         $.ajax({
             url: '/listIntervenantsRequest',
             type: 'GET',
             data: {'projectid' : $id },
             success: function (data) {
-
                 $.each(data,function(index, intervenant) {
                        $items += '<option value="'+intervenant.id+'" ">'+intervenant.first_name+' '+intervenant.last_name+'</option>';
                 });
             }
         })
         .done(function() {
-            $('tbody').append($tr + $editable + $select +$items+ '</select></td>');  
+            $('#tablesort').append($tr + $editable + $select +$items+ '</select></td>');  
             $items="";
         })
         .fail(function() {
@@ -219,13 +213,13 @@ $(document).on('change','#appendable ',function(){
               $inputM = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Manager"></div></td>';
               $inputPP = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Project Participant"></div></td>';
               $inputG = $td+'<input name="role['+data.id+']" tabindex="0" class="hidden" type="radio" value="Guest"></td></div></td>';
-              $delete = '<td class="center aligned iceBG"><div class="ui radio checkbox"><input tabindex="0" class="hidden" type="radio" value="null" name="role['+data.id+']"></div><i class="remove user red icon"></i></td></tr>';
+              $delete = '<td class="center aligned iceBG"><div class="ui radio checkbox"><input tabindex="0" class="hidden" type="radio" value="delete" name="role['+data.id+']"></div><i class="remove user red icon"></i></td></tr>';
               
               
               if(data.fonction == "AI_ORG")
-                $('tbody').append($fname + $lname + $fct + $org + $inputLA + $inputA + $inputPM + $inputQA + $inputApprover + $C_ORG + $delete);
+                $('#tablesort').append($fname + $lname + $fct + $org + $inputLA + $inputA + $inputPM + $inputQA + $inputApprover + $C_ORG + $delete);
               else 
-                $('tbody').append($fname + $lname + $fct + $org + $AI_ORG + $inputM + $inputPP + $inputG + $delete);
+                $('#tablesort').append($fname + $lname + $fct + $org + $AI_ORG + $inputM + $inputPP + $inputG + $delete);
 
             }
         }).done(function() {
@@ -238,19 +232,81 @@ $(document).on('change','#appendable ',function(){
 
 
 $('.Save').click(function(event) {
-  $('#Saving').show();
-    setTimeout(function() {
-      $('#Saving').fadeOut('fast');
-    }, 300); // <-- time in milliseconds
-    
-    $data = $('#formedit').serialize();
-    $.ajax({
-      url: '/saveitRequest',
-      type: 'POST',
-      data: $('#formedit').serialize(),
-      success: function (data) {
-      }
-    })
+  $("input[name^='role']").each(function() {
+     var element = $(this).parent().checkbox('is checked');
+     if (element && $(this).val() == "delete") {
+         $(this).parent().parent().parent().remove();
+    }
+  });
+
+  if($(this).parent().parent().parent().parent().attr('id') == "thirdtab")
+  {
+    $countLA = 0;
+    $countPM = 0;
+    $countApprover = 0;
+
+    $("input[name^='role']").each(function() {
+       var element = $(this).parent().checkbox('is checked');
+       if (element && $(this).val() == "Lead Assessor") {
+           $countLA += 1;
+       }else if (element && $(this).val() == "Project Manager") {
+           $countPM += 1;
+       }else if (element && $(this).val() == "Approver") {
+           $countApprover += 1;
+       }
+    });
+
+    if($countLA == 1) {
+        $('#Saving').show();
+        setTimeout(function() {
+          $('#Saving').fadeOut('fast');
+          }, 300); // <-- time in milliseconds
+          
+          $data = $('#formedit').serialize();
+          $.ajax({
+            url: '/saveitRequest',
+            type: 'POST',
+            data: $('#formedit').serialize(),
+            success: function (data) {
+            }
+          })
+    } 
+    else if($countPM >1 || $countApprover >1 || $countLA >1)
+      alert("You must select one and only one Lead Assessor / Project Manager / Approver");
+    else if($countLA < 1)
+      alert("You must select a Lead Assessor");
+    else {
+      $('#Saving').show();
+        setTimeout(function() {
+          $('#Saving').fadeOut('fast');
+          }, 300); // <-- time in milliseconds
+          
+          $data = $('#formedit').serialize();
+          $.ajax({
+            url: '/saveitRequest',
+            type: 'POST',
+            data: $('#formedit').serialize(),
+            success: function (data) {
+            }
+          })
+    }
+  }else {
+        $('#Saving').show();
+        setTimeout(function() {
+          $('#Saving').fadeOut('fast');
+          }, 300); // <-- time in milliseconds
+          
+          $data = $('#formedit').serialize();
+          $.ajax({
+            url: '/saveitRequest',
+            type: 'POST',
+            data: $('#formedit').serialize(),
+            success: function (data) {
+            }
+          })
+  }
+
+  
 });
 
 
@@ -296,3 +352,32 @@ if($('#phase_6').checkbox('is checked'))
   $('#norme_table').show();
 }
 
+
+$('#SubmitChanges').click(function(event) {
+  $countLA = 0;
+  $countPM = 0;
+  $countApprover = 0;
+  $("input[name^='role']").each(function() {
+     var element = $(this).parent().checkbox('is checked');
+     if (element && $(this).val() == "Lead Assessor") {
+         $countLA += 1;
+     }else if (element && $(this).val() == "Project Manager") {
+         $countPM += 1;
+     }else if (element && $(this).val() == "Approver") {
+         $countApprover += 1;
+     }
+  });
+
+
+  if($countLA == 1) {
+        $("#formedit").submit();
+    } 
+    else if($countPM >1 || $countApprover >1 || $countLA >1)
+      alert("You must select one and only one Lead Assessor / Project Manager / Approver");
+    else if($countLA < 1)
+      alert("You must select a Lead Assessor");
+    else {
+        $("#formedit").submit();
+      }
+
+});

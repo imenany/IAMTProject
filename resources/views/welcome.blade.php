@@ -24,29 +24,24 @@
 </head>
 <body>
 
-    @if(Auth::user()->access == 2)
 
-        @include('C_layouts._leftmenu_layout')
-        @include('C_layouts._usermenu_layout')
-        @include('AI_layouts._modals_layout')
-
-    @elseif(Auth::user()->access == 1)
-
-        @include('AI_layouts._leftmenu_layout')
-        @include('AI_layouts._usermenu_layout')
-        @include('AI_layouts._modals_layout')
-
-    @endif
+        @include('C_ORG_layouts._leftmenu_layout')
+        @include('C_ORG_layouts._usermenu_layout')
+        {{--@include('Admin_layouts._modals_layout')--}}
+        @yield('manager')
+    
 
 </body>
 
 <!-- Scripts -->
-    <script src="{{ URL::asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ URL::asset('js/jquery-ui.js') }}"></script>
-    <script src="{{ URL::asset('js/jquery.resize.js') }}"></script>
-    <script src="{{ URL::asset('semantic/semantic.min.js') }}"></script>
-    <script src="{{ URL::asset('js/custom.js') }}"></script>
-    <script src="{{ URL::asset('js/left_bar_data.js') }}"></script>
+    <script src="{{ URL::asset('/js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ URL::asset('/js/jquery-ui.js') }}"></script>
+    <script src="{{ URL::asset('/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ URL::asset('/js/jquery.resize.js') }}"></script>
+    <script src="{{ URL::asset('/js/dataTables.semanticui.min.js') }}"></script>
+    <script src="{{ URL::asset('/semantic/semantic.min.js') }}"></script>
+    <script src="{{ URL::asset('/js/custom.js') }}"></script>
+    <script src="{{ URL::asset('/js/left_bar_data.js') }}"></script>
     
     @yield('scripts')
     

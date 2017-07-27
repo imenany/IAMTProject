@@ -26,7 +26,7 @@
         <!-- Styles -->
         <style type="text/css">
     body {
-      background-color: rgba(34,36,38,.15);
+      background-color: #D9E8F5;
     }
     body > .grid {
       height: 100%;
@@ -63,17 +63,17 @@
             </div>
         </div>
         @if ($errors->has('email') || $errors->has('password'))
-                <div class="ui negative message">
-                    <div class="header">
-                        These credentials do not match our records.
-                    </div>
-                        Please check your email/password.
-                </div>
+          <div class="ui negative message">
+              <div class="header">
+                  These credentials do not match our records.
+              </div>
+                  Please check your email/password.
+          </div>
         @endif
 
-        <button type="submit" class="ui button fluid large teal">
-                                    Login
-                                </button>
+        <button type="submit" class="ui button fluid large yellow">
+            Login
+        </button>
       </div>
 
       <div class="ui error message"></div>
@@ -83,8 +83,8 @@
     <div class="ui message">
       New to us? <a href="{{ route('register') }}">Sign Up</a>
       <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    Forgot Your Password?
-                                </a>
+          Forgot Your Password?
+      </a>
     </div>
   </div>
 </div>

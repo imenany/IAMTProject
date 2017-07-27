@@ -17,40 +17,90 @@
 	    Session::flush(); 
 	    return Redirect::to('/login');
 	});
-	Route::get('/', function () {return view('welcome');});
-	Route::get('/projects/{id}', 'ProjectsController@getproject');
+	Route::get('/', function () {
+
+        Session::forget('role');
+        Session::forget('currentProject');
+		if(Auth::user()->access == 0)
+			return view('welcome');
+		else return view('Admin_layouts.adminContent');
+	});
+
+// ########################## Route Group : Users ############################ //
+
+
+
+Route::group(['middleware' => 'otherUsers'], function() {
+
+	Route::group(['middleware' => 'LeadAssessorAndAssessor'], function() {
+		//- Findings management Routes
+		Route::post('/addFinding','FindingsController@getAddFindingView');
+		Route::post('/savefindingRequest','FindingsController@addNewFinding');
+
+		Route::post('/modifyFinding/{id}','FindingsController@getModifiyFindingView');
+		Route::post('/modifiedFindings','FindingsController@getModifiedFindingsView');
+
+		//- Document 
+		Route::post('/uploadDocument','documentsController@uploadFile');
+		
+	});
+
+
+	Route::group(['middleware' => 'manager'], function() {
+			//- Baseline management Routes
+		Route::post('/newBaseline','baselineController@newBaseline');
+		Route::post('/lockBaselineRequest','baselineController@lockBaseline');
+		
+		Route::post('/createBaseline','baselineController@createBaseline');
+		Route::post('/updateBaseline','baselineController@updateBaseline');
+		
+		Route::post('/validateDocument','documentsController@validateDocument');
+		Route::post('/rejectDocument','documentsController@rejectDocument');
+		
+		Route::post('/getdocsnotifications','documentsController@countInvalidDocs');
+		Route::get('/validateDocs','documentsController@getDocumentsToValidate');
+		
+		Route::post('/opencloseBaseline','baselineController@getOpenCloseBaselineView');
+		Route::post('/openBaselineRequest','baselineController@openBaselineRequest');
+		Route::post('/closeBaselineRequest','baselineController@closeBaselineRequest');
+
+		Route::post('/lockBaseline','baselineController@getLockBaselineView');
+
+	});
+
+	Route::group(['middleware' => 'PparticipantAndManager'], function() {
+			//- Documents management Routes
+		Route::post('/uploadFile','documentsController@uploadFile')->name('uploadFile');
+		Route::post('/storeFile','documentsController@storeFile');
+		Route::get('/deleteFile/{id}','documentsController@deleteFile');	      
+		Route::get('/modifyDoc','documentsController@modifyDoc');
+		Route::get('/editDocument','documentsController@editDocument');
+		Route::post('/saveEditionDoc','documentsController@saveEditionDoc');
+
+	});
+
+	Route::post('/allFindings','FindingsController@getAllFindingsView');
+	Route::get('/getFindingData','FindingsController@getFindingData');
+	Route::post('/saveFindingResponse','FindingsController@saveFindingResponse');
+	Route::post('/displayFinding','FindingsController@getDisplayFindingView');
+	Route::post('/saveFindingResponseA','FindingsController@saveFindingResponseA');
+
+	Route::post('/allBaselines','baselineController@listOfBaselines');
 	Route::get('listProjectsRequest', 'ProjectsController@getprojects');
+	Route::post('/viewDocuments','documentsController@viewDocuments');
+	Route::post('/allDocuments','documentsController@listOfDocuments');
+	Route::get('/projects/{id}', 'ProjectsController@getproject');
 
-// ########################## Route Group : AI_ORG ############################ //
-
-Route::group(['middleware' => 'AI_ORG'], function() {
-
-	//- Documents management Routes
-	Route::get('/uploadFile','documentsController@uploadFile')->name('uploadFile');
-	Route::post('/uploadFile','documentsController@storeFile');
-	Route::get('/viewDocuments','documentsController@viewDocuments');
-	Route::get('/allDocuments','documentsController@listOfDocuments');
-	Route::get('/deleteFile/{id}','documentsController@deleteFile');	      
-	Route::get('/modifyDoc','documentsController@modifyDoc');
-
-
-	//- Baseline management Routes
-	Route::get('/newBaseline','baselineController@newBaseline');
-	Route::post('/lockBaselineRequest','baselineController@lockBaseline');
-	Route::post('/createBaseline','baselineController@createBaseline');
-	Route::post('/updateBaseline','baselineController@updateBaseline');
-	Route::get('/allBaselines','documentsController@listOfBaselines');
+	Route::get('/listProjectMessages','ProjectsController@getMessages');
+	Route::get('/addMessage','ProjectsController@addMessage');
 	
-
-
-
 });
 
 	Route::get('lang/{lang}', ['as'=>'lang.switch', 'uses'=>'LanguageController@switchLang']);
 
-// ########################## Route Group : C_ORG ############################ //
+// ########################## Route Group : Admin ############################ //
 
-Route::group(['middleware' => 'C_ORG'], function() {
+Route::group(['middleware' => 'Admin'], function() {
 
 	//- Projects management Routes
 	Route::get('/listIntervenantsRequest', 'ProjectsController@getintervenants');
@@ -61,6 +111,7 @@ Route::group(['middleware' => 'C_ORG'], function() {
 	Route::get('/editproject/{id}','ProjectsController@editproject');
 	Route::post('/editPorjectProperties','ProjectsController@updateProjectProperties');
 	Route::post('/saveitRequest','ProjectsController@updateProjectProperties');
+	Route::get('/getOrganisationIntervenants','ProjectsController@getOrganisationIntervenants');
 
 	//- Users management Routes
 	Route::get('/listUsers','UsersController@listUsers');

@@ -169,3 +169,60 @@ if($('#phase_6').checkbox('is checked'))
   $('#norme_table').show();
 }
 
+
+$(document).on('change paste keyup', '#organisation_name', function(event) {
+  $('#intervenantsTable').html("");
+  $org = $('#organisation_name').val();
+    $td = '<td class="center aligned iceBG"><div class="ui radio checkbox ">';
+    $colspan = '<td class="active" colspan=5></td>';
+  $.ajax({
+    url: '/getOrganisationIntervenants',
+    type: 'GET',
+    data: { 'orgname' : $org},
+    success: function (data) {
+      for (var i = data.length - 1; i >= 0; i--) {
+          $fname = '<tr><td class="iceBG"><b>'+data[i].first_name+'</b></td>';
+          $lname = '<td class="iceBG"><b>'+data[i].last_name+'</b></td>';
+          $fct = '<td class="iceBG">'+data[i].fonction+'</td>';
+          $org = '<td class="iceBG">'+data[i].organisation+'</td>';
+          
+          $inputM = $td+'<input name="role['+data[i].id+']" tabindex="0" class="hidden" type="radio" value="Manager"></div></td>';
+          $inputPP = $td+'<input name="role['+data[i].id+']" tabindex="0" class="hidden" type="radio" value="Project Participant"></div></td>';
+          $inputG = $td+'<input name="role['+data[i].id+']" tabindex="0" class="hidden" type="radio" value="Guest"></td></div></td>';
+          $('#intervenantsTable').append($fname + $lname + $fct + $org + $colspan + $inputM + $inputPP + $inputG);        
+      }
+    }
+  })
+  .done(function() {
+    $('.ui.radio.checkbox').checkbox();
+  })
+});
+
+
+
+$('#submitform').click(function(event) {
+  $countLA = 0;
+  $countPM = 0;
+  $countApprover = 0;
+  $("input[name^='role']").each(function() {
+     var element = $(this).parent().checkbox('is checked');
+     if (element && $(this).val() == "Lead Assessor") {
+         $countLA += 1;
+     }else if (element && $(this).val() == "Project Manager") {
+         $countPM += 1;
+     }else if (element && $(this).val() == "Approver") {
+         $countApprover += 1;
+     }
+  });
+
+  if($countLA < 1)
+    alert("You must select a Lead Assessor");
+  else if($countLA == 1)
+    $("#theForm").submit();
+  else if($countPM > 1 || $countApprover > 1 || countLA > 1 )
+    alert("You must select one and only one Lead Assessor / Project Manager / Approver");
+
+});
+
+
+//    $("#theForm").submit();

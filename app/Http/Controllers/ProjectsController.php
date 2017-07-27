@@ -12,6 +12,7 @@ use App\Norme;
 use App\Role;
 use App\Normesphase;
 use App\NormesAssignement;
+use App\Message;
 
 
 class ProjectsController extends Controller
@@ -21,7 +22,8 @@ class ProjectsController extends Controller
     {
         $users = User::all();
         $normes = Norme::all();
-        return view('AI_layouts.content.newProject')->with('normes',$normes)->with('users',$users);
+        $organisations = array_unique(User::all()->pluck('organisation')->toArray());
+        return view('Admin_layouts.content.newProject')->with('normes',$normes)->with('users',$users)->with('organisations',$organisations);
     }
 
 
@@ -29,12 +31,12 @@ class ProjectsController extends Controller
     {
         $request = (Object) $request;
         $data = $request->all();
-        
         $projectID = new Project;
         $projectID->title = $data['Project']['title'];
         $projectID->description = $data['Project']['description'];
         $projectID->dateDebut = date('Y-m-d',strtotime($data['Project']['dateD']));
         $projectID->dateFin = date('Y-m-d',strtotime($data['Project']['dateF']));
+        $projectID->organisation = $data['company'];
         $projectID->save();
 
         //Modify the project normes
@@ -56,39 +58,52 @@ class ProjectsController extends Controller
                 $pp->role_id = Role::where('role',$value)->first()->id;  
                 $pp->save(); 
             }
-        return redirect('/projects/'.$projectID->id);
+        return redirect('/listProjects');
 
     }
 
     public function getproject($id)
     {
-    	session(['currentProject' => $id]);
+        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',$id)->first()->role->role;
+
+        session(['currentProject' => $id]);
+        session(['currentProjectName' => Project::where('id',$id)->get()->first()->title]);
+        session(['role' => $role]);
         $lastbl = Baseline::where('project_id',session('currentProject'))->where('status','opened')->get();
         if(!empty($lastbl->toArray()))
         {
             $curbl = $lastbl[0]->id;
             session(['currentBaseline' => $curbl]);
         } else session(['currentBaseline' => '0.0']);
-        return view('project');
+
+
+        $role = User::find(Auth::user()->id)->pparticipants->where('project_id',$id)->first()->role->role;
+        if($role == "Manager")
+            return view('C_ORG_layouts.manager.project');
+        else if($role == "Project Participant")
+            return view('C_ORG_layouts.pparticipant.project');
+         else if($role == "Guest")
+            return view('C_ORG_layouts.guest.project'); 
+        else if($role == "Lead Assessor")
+            return view('AI_ORG_layouts.LeadAssessor.project'); 
+        else if($role == "Assessor")
+            return view('AI_ORG_layouts.Assessor.project'); 
+        else if($role == "Project Manager")
+            return view('AI_ORG_layouts.ProjectManager.project');       
     }
 
     public function getprojects()
     {
-        if(Auth::user()->fonction == 'admin'){
-        	$projects = Project::All();
-        	return $projects->toJson();
-        } else {
-	        $auth_user = Auth::user()->id;
-	    	$projects_ids = Assignement::where('intervenant_id',$auth_user)->pluck('project_id')->toArray();
-	    	$projects = Project::findMany($projects_ids);
-	        return $projects->toJson();
-	    }
+        $auth_user = Auth::user()->id;
+        $projects_ids = Pparticipant::with('project')->where('user_id',Auth::user()->id)->get();
+        
+        return $projects_ids;
     }    
 
     public function listProjects()
     {
         $projects = Project::all();
-        return view('AI_layouts.content.projectList')->with('projects',$projects);
+        return view('Admin_layouts.content.projectList')->with('projects',$projects);
     }
 
     public function editproject($id)
@@ -96,7 +111,7 @@ class ProjectsController extends Controller
         $project = Project::find($id);
         $normes = Norme::all();
         $selectednormesids = array_map('current', $project->normesassignements->toArray());
-        return view('AI_layouts.content.editproject')->with('project',$project)->with('normes',$normes)->with('selectednormes',$selectednormesids);
+        return view('Admin_layouts.content.editproject')->with('project',$project)->with('normes',$normes)->with('selectednormes',$selectednormesids);
     }
 
     public function updateProjectProperties(Request $req)
@@ -114,6 +129,8 @@ class ProjectsController extends Controller
         //Modify the project normes
         NormesAssignement::where('project_id', $projectID->id)->forceDelete();
         // key = phase_id     value = "on"
+        
+        if(isset($data['Phase']))
         foreach ($data['Phase'] as $key => $value) {
             $normesassignement = new NormesAssignement;
             $normesassignement->project_id = $projectID->id;
@@ -139,10 +156,8 @@ class ProjectsController extends Controller
 
     public function getintervenants(Request $request)
     {
-
         $id =  $request->input('projectid');
-        $users = User::all();
-
+        $users = User::whereIn('organisation',[Project::where('id',$id)->first()->organisation,'Viattech Q&S'])->get();
         return $users;
     }
 
@@ -152,13 +167,30 @@ class ProjectsController extends Controller
         return $intervenant;
     }
 
-
-
-    /*public function getAssociatedPhaseSteps(Request $req)
+    public function getOrganisationIntervenants(Request $req)
     {
-        $request = (Object) $req;
-        $data = $request->all();
-        $phasesteps = Normesphase::find($data['id'])->normephasestep;
-        return $phasesteps;
-    }*/
+        $name =  $req->input('orgname');
+        $intervenants = User::where('organisation',$name)->get();
+
+        return $intervenants;
+    }
+
+    public function getMessages()
+    {       
+        $messages = Message::with('user')->where('project_id',session('currentProject'))->get();
+        return $messages;
+    }
+
+    public function addMessage(Request $req){
+        $message = $req->input('message');
+
+        $entry = new Message;
+        $entry->message = $message;
+        $entry->user_id = Auth::user()->id;
+        $entry->project_id = session('currentProject');
+        $entry->save();
+
+        return 'data';
+    }
+
 }
