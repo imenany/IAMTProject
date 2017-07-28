@@ -1,0 +1,63 @@
+html, body {margin: 10; height: 100%;
+	font-family: 'Lato','Helvetica Neue',Arial,Helvetica,sans-serif;
+    }
+
+.slogan{
+	font-size: 8pt;
+	color: #304269;
+}
+
+.logo{
+	margin-bottom: 20px;
+}
+
+h3{
+	color: #304269;
+}
+
+table{
+    margin: 1em auto;
+    border-collapse: collapse;
+	font-family: 'Lato','Helvetica Neue',Arial,Helvetica,sans-serif;
+    font-size: 8pt;
+
+  }
+  th, td {
+    padding: 4px 8px;
+            text-align: left;
+
+  }
+  thead{
+  	    border: 1px solid #91BED4;
+  }
+  thead th {
+    background: #91BED4;
+    font-size: 8pt;
+	color: #304269;
+  }
+  tr {
+    border-right: 1px solid #91BED4;
+  }
+  tbody tr {
+    border-bottom: 1px solid #91BED4;
+  }
+  tbody th, tbody tr td {
+    border: 1px solid #91BED4;
+  }  
+
+
+.page {
+	page-break-after:always;
+	position: absolute;
+}
+
+  .lightYellow{
+	background: #FCFAD0;
+}
+
+.darkYellow{
+	background: #B8B698;
+}
+
+.pagenum:before { content: counter(page); }
+      table { page-break-after: always; }

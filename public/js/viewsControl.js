@@ -81,7 +81,7 @@
     });
 
     $('#showModifyFinding').click(function(event) {
-        $.post('/modifyFinding/{id}', function(data, textStatus, xhr) {
+        $.post('/modifyFinding', function(data, textStatus, xhr) {
             $("#page_title").html("Modify a finding");
             $("#ISA_content").html(data);
         });
@@ -90,6 +90,13 @@
     $('#showModifiedFindings').click(function(event) {
         $.post('/modifiedFindings', function(data, textStatus, xhr) {
             $("#page_title").html("Modified findings");
+            $("#ISA_content").html(data);
+        });
+    });
+
+    $('#showCreateRobs').click(function(event) {
+        $.post('/generateROBS', function(data, textStatus, xhr) {
+            $("#page_title").html("Generate ROBS");
             $("#ISA_content").html(data);
         });
     });

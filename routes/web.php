@@ -37,7 +37,7 @@ Route::group(['middleware' => 'otherUsers'], function() {
 		Route::post('/addFinding','FindingsController@getAddFindingView');
 		Route::post('/savefindingRequest','FindingsController@addNewFinding');
 
-		Route::post('/modifyFinding/{id}','FindingsController@getModifiyFindingView');
+		Route::post('/modifyFinding','FindingsController@getModifiyFindingView');
 		Route::post('/modifiedFindings','FindingsController@getModifiedFindingsView');
 
 		//- Document 
@@ -84,6 +84,14 @@ Route::group(['middleware' => 'otherUsers'], function() {
 	Route::post('/saveFindingResponse','FindingsController@saveFindingResponse');
 	Route::post('/displayFinding','FindingsController@getDisplayFindingView');
 	Route::post('/saveFindingResponseA','FindingsController@saveFindingResponseA');
+	Route::post('/saveFindingModification','FindingsController@saveFindingModification');
+
+
+	Route::post('/generateROBS','FindingsController@getGenerateROBSView');
+
+	Route::get('/downloadROBS','FindingsController@generateROBS');
+
+
 
 	Route::post('/allBaselines','baselineController@listOfBaselines');
 	Route::get('listProjectsRequest', 'ProjectsController@getprojects');

@@ -75,7 +75,7 @@ var interval = null;
 	$cl_text = '<div class="text">';
 	$cl_actions = '<div class="actions"><a class="reply" >Reply</a>';
 
-	window.setInterval(function(){
+/*	window.setInterval(function(){
 		$.ajax({
 			url: '/listProjectMessages',
 			type: 'GET',
@@ -105,7 +105,7 @@ var interval = null;
 				$('#Message').val("@"+$(this).parent().siblings('.author').html()+' '+$(this).parent().siblings('.metadata').children('.date').html() + "\n >>>> \n");
 			});
 		});
-	}, 5000);
+	}, 5000);*/
 
 
 	$('#addMessage').click(function(event) {

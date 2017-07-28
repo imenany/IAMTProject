@@ -19,6 +19,7 @@ use App\Norme;
 use App\NormesAssignement;
 use App\Finding;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use PDF;
 
 class FindingsController extends Controller
 {
@@ -64,9 +65,11 @@ class FindingsController extends Controller
 		return $this->getRoleAndSet('isaMan.addFindings','data', $data);
 	}
 
-    public function getModifiyFindingView($id)
+    public function getModifiyFindingView()
     {
-        return $this->getRoleAndSet('isaMan.modifyFinding','',null);
+        $findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
+        $findings = $findings->groupby('finding');
+        return $this->getRoleAndSet('isaMan.modifyAFinding','findings',$findings);
     }	
 
     public function getDisplayFindingView(Request $req)
@@ -80,10 +83,11 @@ class FindingsController extends Controller
 		return $this->getRoleAndSet('isaMan.displayFinding','findings',$findings);
 	}
 
-	public function getModifiedFindingsView($id)
+	public function getModifiedFindingsView()
 	{
-		
-		return $this->getRoleAndSet('isaMan.modifiedFindings','',null);
+		$findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
+        $findings = $findings->groupby('finding');
+        return $this->getRoleAndSet('isaMan.modifiedFindings','findings',$findings);
 	}
 
     public function addNewFinding(Request $req)
@@ -129,9 +133,13 @@ class FindingsController extends Controller
         $data = $request->all();
         $id = $data['id'];
 
-
+        $pparticipants = Pparticipant::with('user')->where('project_id',session('currentProject'))->get();
+        $documents = Document::where('baseline_id',session('currentBaseline'))->get();
         $finding = Finding::where('id',$id)->orderBy('created_at')->get()->first();
-        return $finding;
+
+        $array = array('finding' => $finding, 'pparticipant' => $pparticipants, 'documents' => $documents);
+
+        return $array;
 
     }
 
@@ -162,6 +170,43 @@ class FindingsController extends Controller
         $cycle = substr($prevfinding->cycle,0,1) +1;
         $finding->cycle = $cycle."O";
         $finding->save();
+    }
+
+    public function saveFindingModification(Request $req)
+    {
+        $request = (Object) $req;
+        $data = $request->all();
+        $id = $data['theid'];
+
+        $prevfinding = Finding::where('id',$id)->get()->last();
+        $finding = $prevfinding->replicate();
+        $finding->description = $data['finding']['newdescription'];
+        $finding->recommendation = $data['finding']['newrecommendation'];
+        $finding->finding = $data['finding']['newfinding'];
+        $finding->document_id = $data['finding']['newdocument'];
+        $finding->severity = $data['finding']['newseverity'];
+        $finding->responsable = $data['finding']['newresponsable'];
+        $finding->response= '';
+        $cycle = substr($prevfinding->cycle,0,1) +1;
+        $finding->cycle = $cycle."O";
+        $finding->save();
+
+
+    }
+
+    public function getGenerateROBSView(){
+
+        return $this->getRoleAndSet('isaMan.generateROBS','',null);
+    }
+
+
+    public function generateROBS()
+    {
+        $name = Finding::where('project_id',session('currentProject'))->where('id',27)->get()->first()->finding;
+        $findings = Finding::where('project_id',session('currentProject'))->where('finding',$name)->get();
+        $pdf = PDF::loadView('pdf.ROBS',['findings' => $findings])->setPaper('a4', 'landscape');
+        $pdf->setOptions(['isPhpEnabled' => true]);
+        return $pdf->stream('ROBS.pdf');
     }
 
 }

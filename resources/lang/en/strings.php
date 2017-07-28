@@ -23,7 +23,8 @@ return [
 	'createdby' => 'Created By',
 	'waitingResponseClient' => 'Waiting for client\'s response',
 	'waitingResponseAssessor' => 'Waiting for assessor\'s response',
-
+	'responsable' => 'Responsable',
+	'response' => 'Response',
 /*
 * Documents
  */

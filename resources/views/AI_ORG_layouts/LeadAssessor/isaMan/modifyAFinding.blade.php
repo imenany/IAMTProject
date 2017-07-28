@@ -29,7 +29,7 @@
                 <td> {{$finding->last()->created_at}} </td>
                 <td> {{$finding->last()->user->first_name}} {{$finding->last()->user->last_name}} </td>
                 <td> {{$finding->last()->updated_at}} </td>
-                <td> <i class="add circle icon orange large link more" data-finding="{{$finding->last()->id}}"></i></td>
+                <td> @if( strpos($finding->last()->cycle, 'O') !== false) <i class="edit icon orange large link editFinding" data-finding="{{$finding->last()->id}}"></i> @endif</td>
             </tr>
         @endforeach
         </tbody>

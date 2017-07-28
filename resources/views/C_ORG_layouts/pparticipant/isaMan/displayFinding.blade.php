@@ -18,7 +18,7 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
-            @if($finding->theresponsable->id == Auth::user()->id)
+            
             <tr class="{!! ( strpos($finding->cycle, 'R') !== false) ? 'lightYellow' : '' !!}">
                 <td> {{$finding->finding}} </td>
                 <td> {{$finding->cycle}} </td>
@@ -37,14 +37,15 @@
                 <td> {{$finding->user->first_name}} {{$finding->user->last_name}} </td>
                 <td> {{$finding->updated_at}} </td>
                 <td>
+                @if($finding->theresponsable->id == Auth::user()->id)
                     @if($finding->id == $findings->last()->id && strpos($finding->cycle, 'O') !== false)
                         <i class="reply icon orange large link response" data-finding="{{$finding->id}}"></i>
                     @elseif($finding->id == $findings->last()->id && strpos($finding->cycle, 'R') !== false)
                         @lang('strings.waitingResponseAssessor')
                     @endif
+                @endif
                 </td>
             </tr>
-            @endif
         @endforeach
         </tbody>
       </table>

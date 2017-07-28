@@ -73,22 +73,70 @@
   <div class="header" id="finding_name">Add response to finding : </div>
   <div class="content">
 		<form class="ui form" id="response_finding_form">
-		<table class="ui definition table">
-		<input name="id" class="hidden">
-		  <tbody>
-		  	<tr>
-		      <td class="two wide column">Description</td>
-		      <td><textarea name="description" disabled=""></textarea></td>
-		    </tr>
-		    <tr>
-		      <td class="two wide column">Recommendation</td>
-		      <td><textarea name="recommendation" disabled></textarea></td>
-		    </tr>
-		    <tr>
-		      <td class="two wide column">Response</td>
-		      <td> <textarea name="response"></textarea></td>
-		    </tr>
-		  </tbody>
+				<table class="ui definition table">
+			<input name="id" class="hidden">
+			  <tbody>
+			  	<tr>
+	              <td class="two wide column">@lang('strings.finding')</td>
+	              <td><input name="finding[finding]" disabled></td>
+	            </tr>
+	            <tr>
+	              <td class="two wide column">@lang('strings.relatedDoc')</td>
+	              <td>
+	                 <div class="ui form">
+	                  <div class="field">
+	                      <select name="finding[document]" disabled>
+	                        
+	                          {{--<option value="{{$document->id}}">{{$document->title}} </option>--}}
+	                        
+	                      </select>
+	                  </div>
+	                </div>
+	              </td>
+	            </tr>
+	            <tr>
+	              <td class="two wide column">@lang('strings.description')</td>
+	              <td><textarea name="finding[description]" disabled=""></textarea></td>
+	            </tr>
+	            <tr>
+	              <td class="two wide column">@lang('strings.recommendation')</td>
+	              <td><textarea name="finding[recommendation]" disabled></textarea></td>
+	            </tr>
+	            <tr>
+	              <td class="two wide column">@lang('strings.response')</td>
+	              <td><textarea name="finding[response]"></textarea></td>
+	            </tr>
+	            <tr>
+	              <td>@lang('strings.severity')</td>
+	              <td>
+	                <div class="ui form">
+	                  <div class="field" >
+	                      <select name="finding[severity]" disabled>
+	                        <option value="NA">NA</option>
+	                        <option value="MIN">MIN</option>
+	                        <option value="MAJ">MAJ</option>
+	                        <option value="CRIT">CRIT</option>
+	                      </select>
+	                  </div>
+	                </div>
+	              </td>
+	            </tr>
+
+	            <tr>
+	              <td class="two wide column">@lang('strings.responsable')</td>
+	              <td>
+	                <div class="ui form">
+	                  <div class="field">
+	                      <select name="finding[responsable]" disabled>
+
+	                          {{--<option value="{{$user->user->id}}">{{$user->user->first_name}} {{$user->user->last_name}}</option>--}}
+
+	                      </select>
+	                  </div>
+	                </div>
+	              </td>
+	            </tr>
+			  </tbody>
 		</table>
 		<div class="ui red message hidden" id="message">@lang('strings.fillAllMessage')</div>
 		<div class="ui grid segment">
@@ -109,27 +157,150 @@
   <div class="content">
 		<form class="ui form" id="responseA_finding_form">
 		<table class="ui definition table">
-		<input name="id" class="hidden">
-		  <tbody>
-		  	<tr>
-		      <td class="two wide column">Response</td>
-		      <td> <textarea name="responseA" disabled></textarea></td>
-		    </tr>
-		  	<tr>
-		      <td class="two wide column">Description</td>
-		      <td><textarea name="descriptionA"></textarea></td>
-		    </tr>
-		    <tr>
-		      <td class="two wide column">Recommendation</td>
-		      <td><textarea name="recommendationA"></textarea></td>
-		    </tr>
-		  </tbody>
+			<input name="idA" class="hidden">
+			  <tbody>
+			  	<tr>
+	              <td class="two wide column">@lang('strings.finding')</td>
+	              <td><input name="finding[findingA]" ></td>
+	            </tr>
+	            <tr>
+	              <td class="two wide column">@lang('strings.relatedDoc')</td>
+	              <td>
+	                 <div class="ui form">
+	                  <div class="field">
+	                      <select name="finding[documentA]">
+	                        
+	                          {{--<option value="{{$document->id}}">{{$document->title}} </option>--}}
+	                        
+	                      </select>
+	                  </div>
+	                </div>
+	              </td>
+	            </tr>
+	            <tr>
+	              <td class="two wide column">@lang('strings.description')</td>
+	              <td><textarea name="finding[descriptionA]"></textarea></td>
+	            </tr>
+	            <tr>
+	              <td class="two wide column">@lang('strings.recommendation')</td>
+	              <td><textarea name="finding[recommendationA]"></textarea></td>
+	            </tr>
+	            <tr>
+	              <td>@lang('strings.severity')</td>
+	              <td>
+	                <div class="ui form">
+	                  <div class="field">
+	                      <select name="finding[severityA]">
+	                        <option value="NA">NA</option>
+	                        <option value="MIN">MIN</option>
+	                        <option value="MAJ">MAJ</option>
+	                        <option value="CRIT">CRIT</option>
+	                      </select>
+	                  </div>
+	                </div>
+	              </td>
+	            </tr>
+
+	            <tr>
+	              <td class="two wide column">@lang('strings.responsable')</td>
+	              <td>
+	                <div class="ui form">
+	                  <div class="field">
+	                      <select name="finding[responsableA]">
+
+	                          {{--<option value="{{$user->user->id}}">{{$user->user->first_name}} {{$user->user->last_name}}</option>--}}
+
+	                      </select>
+	                  </div>
+	                </div>
+	              </td>
+	            </tr>
+			  </tbody>
 		</table>
 		<div class="ui red message hidden" id="message">@lang('strings.fillAllMessage')</div>
 		<div class="ui grid segment">
 			<div class="ui twelve wide column"></div>
 			<div class="ui four wide column">
 		        <div class="fluid yellow ui button save" id="SubmitResponseA">@lang('strings.save')</div>
+		    </div>
+	    </div>
+		</form>
+	</div>
+</div>
+
+
+<div class="ui modal" id="editFindingModal">
+	{{ csrf_field() }}
+  <i class="close icon"></i>
+  <div class="header" id="finding_nameA">Modify finding : </div>
+  <div class="content">
+		<form class="ui form" id="modify_finding_form">
+		<table class="ui definition table">
+		<input name="theid" class="hidden">
+		  <tbody>
+		  	<tr>
+              <td class="two wide column">@lang('strings.finding')</td>
+              <td><input name="finding[newfinding]" ></td>
+            </tr>
+            <tr>
+              <td class="two wide column">@lang('strings.relatedDoc')</td>
+              <td>
+                 <div class="ui form">
+                  <div class="field">
+                      <select name="finding[newdocument]">
+                        
+                          {{--<option value="{{$document->id}}">{{$document->title}} </option>--}}
+                        
+                      </select>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="two wide column">@lang('strings.description')</td>
+              <td><textarea name="finding[newdescription]"></textarea></td>
+            </tr>
+            <tr>
+              <td class="two wide column">@lang('strings.recommendation')</td>
+              <td><textarea name="finding[newrecommendation]"></textarea></td>
+            </tr>
+            <tr>
+              <td>@lang('strings.severity')</td>
+              <td>
+                <div class="ui form">
+                  <div class="field">
+                      <select name="finding[newseverity]">
+                        <option value="NA">NA</option>
+                        <option value="MIN">MIN</option>
+                        <option value="MAJ">MAJ</option>
+                        <option value="CRIT">CRIT</option>
+                      </select>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="two wide column">@lang('strings.responsable')</td>
+              <td>
+                <div class="ui form">
+                  <div class="field">
+                      <select name="finding[newresponsable]">
+
+                          {{--<option value="{{$user->user->id}}">{{$user->user->first_name}} {{$user->user->last_name}}</option>--}}
+
+                      </select>
+                  </div>
+                </div>
+              </td>
+            </tr>
+		  </tbody>
+		</table>
+		<div class="ui red message hidden" id="message">@lang('strings.fillAllMessage')</div>
+		<div class="ui grid segment">
+			<div class="ui twelve wide column"></div>
+			<div class="ui four wide column">
+		        <div class="fluid yellow ui button save" id="submitModification">@lang('strings.save')</div>
 		    </div>
 	    </div>
 		</form>
