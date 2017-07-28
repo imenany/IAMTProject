@@ -20,6 +20,7 @@ use App\NormesAssignement;
 use App\Finding;
 use Barryvdh\Debugbar\Facade as Debugbar;
 use PDF;
+use Excel;
 
 class FindingsController extends Controller
 {
@@ -202,12 +203,26 @@ class FindingsController extends Controller
 
     public function generateROBS()
     {
-        $name = Finding::where('project_id',session('currentProject'))->where('id',27)->get()->first()->finding;
+        /*$name = Finding::where('project_id',session('currentProject'))->where('id',27)->get()->first()->finding;
         $findings = Finding::where('project_id',session('currentProject'))->where('finding',$name)->get();
         $pdf = PDF::loadView('pdf.ROBS',['findings' => $findings])->setPaper('a4', 'landscape');
         $pdf->setOptions(['isPhpEnabled' => true]);
-        return $pdf->stream('ROBS.pdf');
+        return $pdf->stream('ROBS.pdf');*/
+        
+        $name = Finding::where('project_id',session('currentProject'))->where('id',27)->get()->first()->finding;
+        $findings = Finding::where('project_id',session('currentProject'))->where('finding',$name)->get(['finding','cycle','description','document_id','recommendation','status','severity','created_at','user_id','responsable','updated_at']);
+
+        Excel::create('ROBS', function($excel) use($findings) {
+
+
+            $excel->sheet('Finding', function($sheet) use($findings){
+                
+                 $sheet->loadView('xls.ROBS', array('findings' => $findings));
+                $sheet->setAutoSize(true);
+            });
+        })->export('xls');
+
+
     }
 
 }
-
