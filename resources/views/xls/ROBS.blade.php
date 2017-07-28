@@ -10,8 +10,8 @@
 
 
 <div align="right" class="logo">
-	<img src="{{ ltrim(elixir('img/viattechlogo.png'), '/') }}" alt="placeholder+image" >
-    <br><span class="slogan">Your Partner for Quality and Safety Assurance Management</span>
+	<td></td><td></td><img src="{{ ltrim(elixir('img/viattechlogo.png'), '/') }}" alt="placeholder+image" >
+    <td></td><br><span class="slogan">Your Partner for Quality and Safety Assurance Management</span>
 
 </div>
 <h3 align="center">
@@ -20,6 +20,7 @@
       <table class="">
         <thead>
           <tr>
+            <th style="background: #FFFFFF!important"></th>
             <th>@lang('strings.finding')</th>
             <th>@lang('strings.cycle')</th>
             <th>@lang('strings.description')</th>
@@ -36,8 +37,9 @@
         <tbody>
         @foreach($findings as $finding)
             <tr class="{!! ( strpos($finding->cycle, 'R') !== false) ? 'lightYellow' : '' !!}">
+                <td width="5" style="background: #FFFFFF!important"> </td>
                 <td width="20"> {{$finding->finding}} </td>
-                <td width="10"> {{$finding->cycle}} </td>
+                <td width="8"> {{$finding->cycle}} </td>
                 <td width="50"> 
                     @if(strpos($finding->cycle, 'O') !== false)
                         <div id="description{{$finding->id}}" data-html="{{$finding->description}}"> {{$finding->description}}</div>
@@ -45,7 +47,7 @@
                         <div id="description{{$finding->id}}" data-html="{{$finding->response}}"> {{$finding->response}}</div>
                     @endif
                 </td>
-                <td width="30"> {{$finding->document->title}} </td>
+                <td width="25"> {{$finding->document->title}} </td>
                 <td width="50"> <div id="recommendation{{$finding->id}}" data-html="{{$finding->recommendation}}"> {{$finding->recommendation}}</div> </td>
                 <td width="10"> {{$finding->status}} </td>
                 <td width="10"> {{$finding->severity}} </td>
