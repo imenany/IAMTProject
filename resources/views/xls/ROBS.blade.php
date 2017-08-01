@@ -15,8 +15,10 @@
 
 </div>
 <h3 align="center">
-	Projet : {{$findings->first()->document->baseline->project->title}} - Findings ISA - {{date('l jS \of F Y h:i:s A e')}}
+	   Projet : {{$findings->first()->first()->document->baseline->project->title}} - Findings ISA {{date('l jS \of F Y h:i:s A e')}}
 </h3>
+    @foreach($findings as $element)
+
       <table class="">
         <thead>
           <tr>
@@ -35,7 +37,7 @@
           </tr>
           </thead>
         <tbody>
-        @foreach($findings as $finding)
+        @foreach($element as $finding)
             <tr class="{!! ( strpos($finding->cycle, 'R') !== false) ? 'lightYellow' : '' !!}">
                 <td width="5" style="background: #FFFFFF!important"> </td>
                 <td width="20"> {{$finding->finding}} </td>
@@ -60,6 +62,7 @@
         </tbody>
 
       </table>
+        @endforeach
 
 
 

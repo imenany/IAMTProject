@@ -79,6 +79,22 @@ Route::group(['middleware' => 'otherUsers'], function() {
 
 	});
 
+
+	/* ********* Project Phases Management ****************/
+	Route::post('/projectPhases','ProjectsController@getProjectPhasesView');
+	Route::post('/changePhasesRequest','ProjectsController@changePhases');
+
+	/* ********* Project Participants Management ****************/
+	Route::post('/projectParticipants','ProjectsController@getProjectParticipantsView');
+	Route::post('/changeProjectParticipants','ProjectsController@changeParticipants');
+	Route::get('/listProjectIntervenantsRequest', 'ProjectsController@getProjectintervenants');
+	Route::get('/getProjectIntervenantRequest', 'ProjectsController@gettheintervenant');
+
+	/* ********* Project Documents Accessibility ****************/
+	Route::post('/documentsAccessibility','ProjectsController@geDocumentsAccessibilityView');
+
+
+	/*********** Findings Routes ****************/
 	Route::post('/allFindings','FindingsController@getAllFindingsView');
 	Route::get('/getFindingData','FindingsController@getFindingData');
 	Route::post('/saveFindingResponse','FindingsController@saveFindingResponse');
@@ -86,21 +102,23 @@ Route::group(['middleware' => 'otherUsers'], function() {
 	Route::post('/saveFindingResponseA','FindingsController@saveFindingResponseA');
 	Route::post('/saveFindingModification','FindingsController@saveFindingModification');
 
+	/*********** ROBS Routes ****************/
+	Route::post('/generateROBSView','FindingsController@getGenerateROBSView');
+	Route::get('/generateROBSPDF','FindingsController@generateROBSPDF');
+	Route::get('/generateROBSXLS','FindingsController@generateROBSXLS');
+	Route::post('/downloadROBS','FindingsController@generateROBS');
 
-	Route::post('/generateROBS','FindingsController@getGenerateROBSView');
+	/*********** CHAT Routes ****************/
+	Route::get('/listProjectMessages','ProjectsController@getMessages');
+	Route::get('/addMessage','ProjectsController@addMessage');
 
-	Route::get('/downloadROBS','FindingsController@generateROBS');
 
-
-
+	
 	Route::post('/allBaselines','baselineController@listOfBaselines');
 	Route::get('listProjectsRequest', 'ProjectsController@getprojects');
 	Route::post('/viewDocuments','documentsController@viewDocuments');
 	Route::post('/allDocuments','documentsController@listOfDocuments');
 	Route::get('/projects/{id}', 'ProjectsController@getproject');
-
-	Route::get('/listProjectMessages','ProjectsController@getMessages');
-	Route::get('/addMessage','ProjectsController@addMessage');
 	
 });
 

@@ -18,6 +18,31 @@ use App\Message;
 class ProjectsController extends Controller
 {
 
+      public function getRoleAndSet($view,$name,$data){
+        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == "Manager")
+            $layout = "C_ORG_layouts.manager";
+        else if($role == "Project Participant")
+            $layout = "C_ORG_layouts.pparticipant";
+        else if($role == "Guest")
+            $layout = "C_ORG_layouts.guest";
+        else if($role == "Lead Assessor")
+            $layout = "AI_ORG_layouts.LeadAssessor";
+        else if($role == "Assessor")
+            $layout = "AI_ORG_layouts.Assessor";
+        else if($role == "Project Manager")
+            $layout = "AI_ORG_layouts.ProjectManager";
+        else if($role == "Approver")
+            $layout = "AI_ORG_layouts.Approver";
+        else if($role == "QA")
+            $layout = "AI_ORG_layouts.QA";
+
+        if(is_array($data))
+            return view($layout.'.'.$view)->with($data)->render();
+        else
+            return view($layout.'.'.$view)->with($name,$data)->render();
+    }
+
     public function newprojectview(Request $request)
     {
         $users = User::all();
@@ -78,18 +103,9 @@ class ProjectsController extends Controller
 
 
         $role = User::find(Auth::user()->id)->pparticipants->where('project_id',$id)->first()->role->role;
-        if($role == "Manager")
-            return view('C_ORG_layouts.manager.project');
-        else if($role == "Project Participant")
-            return view('C_ORG_layouts.pparticipant.project');
-         else if($role == "Guest")
-            return view('C_ORG_layouts.guest.project'); 
-        else if($role == "Lead Assessor")
-            return view('AI_ORG_layouts.LeadAssessor.project'); 
-        else if($role == "Assessor")
-            return view('AI_ORG_layouts.Assessor.project'); 
-        else if($role == "Project Manager")
-            return view('AI_ORG_layouts.ProjectManager.project');       
+        
+        return $this->getRoleAndSet('.project','data',null);
+
     }
 
     public function getprojects()
@@ -161,6 +177,13 @@ class ProjectsController extends Controller
         return $users;
     }
 
+    public function getProjectintervenants(Request $request)
+    {
+        $id =  session('currentProject');
+        $users = User::whereIn('organisation',[Project::where('id',$id)->first()->organisation,'Viattech Q&S'])->get();
+        return $users;
+    }
+
     public function gettheintervenant(Request $request){
         $id =  $request->input('id');
         $intervenant = User::find($id);
@@ -191,6 +214,81 @@ class ProjectsController extends Controller
         $entry->save();
 
         return 'data';
+    }
+
+
+    public function getProjectParticipantsView(){
+        $project = Project::find(session('currentProject'));
+        $users = User::whereIn('organisation',[Project::where('id',session('currentProject'))->first()->organisation,'Viattech Q&S'])->get();
+
+        $array = array('project' => $project, 'users' => $users);
+
+        return $this->getRoleAndSet('isaMan.pparticipantsManagement','data',$array);
+    }
+
+    public function changeParticipants(Request $req)
+    {
+        $request = (object) $req;
+        $data = $request->all();
+
+        Pparticipant::where('project_id', session('currentProject'))->forceDelete();
+        if(isset($data['role']))
+        {
+            foreach ($data['role'] as $user => $value) {
+                if($value != "null")
+                {
+                    $pp = new Pparticipant;
+                    $pp->project_id = session('currentProject');
+                    $pp->user_id = $user;
+                    $pp->role_id = Role::where('role',$value)->first()->id;  
+                    $pp->save();
+                } 
+            }
+            return 'true';
+        }
+        else return 'false';
+    }
+
+
+    public function getProjectPhasesView(){
+        $project = Project::find(session('currentProject'));
+        $normes = Norme::all();
+        $selectednormesids = array_map('current', $project->normesassignements->toArray());
+        
+        $array = array('project' => $project, 'normes' => $normes, 'selectednormes' => $selectednormesids);
+        return $this->getRoleAndSet('isaMan.phasesManagement','data',$array);
+    }
+
+    public function changePhases(Request $req)
+    {
+        $request = (object) $req;
+        $data = $request->all();
+
+
+        if(isset($data['Phase']))
+        {   
+            NormesAssignement::where('project_id', session('currentProject'))->forceDelete();
+            foreach ($data['Phase'] as $key => $value) {
+                $normesassignement = new NormesAssignement;
+                $normesassignement->project_id = session('currentProject');
+                $normesassignement->normesphase_id = $key; 
+                $normesassignement->save(); 
+            }
+            return 'true';
+        }
+        else return 'false';
+
+    }
+
+
+    public function geDocumentsAccessibilityView(){
+
+        $documents = Project::where('id',session('currentProject'))->get()->first()->baselines;
+
+
+
+        $array = array('project' => $project, 'normes' => $normes, 'selectednormes' => $selectednormesids);
+        return $this->getRoleAndSet('isaMan.phasesManagement','data',$array);
     }
 
 }

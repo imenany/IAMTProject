@@ -174,6 +174,40 @@
 
   });
 
+  $('#generateROBSPDFButton').click(function(event) {
+    $.ajax({
+      url: '/generateROBSPDF',
+      data: $('#GenerateROBSForm').serialize(),
+      success: function (data) {
+        $url = data.replace("public/","");
+        $('#download').attr({
+          href: "/storage/"+$url,
+        });
+      }
+    })
+    .done(function() {
+      $("#download span").trigger("click");
+    });
+    
+  });
+
+    $('#generateROBSXLSButton').click(function(event) {
+    $.ajax({
+      url: '/generateROBSXLS',
+      data: $('#GenerateROBSForm').serialize(),
+      success: function (data) {
+        $url = data.replace("public/","");
+        $('#download').attr({
+          href: "/storage/"+$url,
+        });
+      }
+    })
+    .done(function() {
+      $("#download span").trigger("click");
+    });
+    
+  });
+
 
 
 

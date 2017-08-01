@@ -15,11 +15,15 @@ class CreateFindingsTable extends Migration
     {
         Schema::create('findings', function(Blueprint $table){
             $table->increments('id');
-            $table->string('finding');
+            $table->text('finding');
             $table->string('cycle');
             $table->integer('document_id');
-            $table->text('recommendation');
-            $table->text('response');
+            $table->integer('project_id');
+            $table->longText('description');
+            $table->longText('recommendation');
+            $table->longText('response');
+            $table->integer('responsable');
+            $table->integer('user_id');
             $table->char('status',1);
             $table->enum('severity', ['MIN', 'NA', 'MAX', 'CRIT']);
             $table->integer('valid');

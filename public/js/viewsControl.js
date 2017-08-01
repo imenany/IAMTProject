@@ -95,13 +95,32 @@
     });
 
     $('#showCreateRobs').click(function(event) {
-        $.post('/generateROBS', function(data, textStatus, xhr) {
+        $.post('/generateROBSView', function(data, textStatus, xhr) {
             $("#page_title").html("Generate ROBS");
             $("#ISA_content").html(data);
         });
     });
 
+    $('#showProjPhasesMan').click(function(event) {
+        $.post('/projectPhases', function(data, textStatus, xhr) {
+            $("#page_title").html("Project Phases Management");
+            $("#ISA_content").html(data);
+        });
+    });
 
+    $('#showProjParticipant').click(function(event) {
+        $.post('/projectParticipants', function(data, textStatus, xhr) {
+            $("#page_title").html("Project Participants Management");
+            $("#ISA_content").html(data);
+        });
+    });
+
+    $('#showDefineDocAcce').click(function(event) {
+        $.post('/documentsAccessibility', function(data, textStatus, xhr) {
+            $("#page_title").html("Documents Accessibility");
+            $("#ISA_content").html(data);
+        });
+    });
 
 
     $redirectTo = ("#"+$('#redirect').html()).replace(/\s/g, '');

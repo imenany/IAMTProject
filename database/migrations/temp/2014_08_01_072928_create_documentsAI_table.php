@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDocumentsTable extends Migration
+class CreateDocumentsAITable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDocumentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('documentsAI', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('title');
@@ -23,6 +23,10 @@ class CreateDocumentsTable extends Migration
             $table->string('url');
             $table->boolean('valid')->default(false);
             $table->boolean('accessibility')->default(false);
+            $table->integer('leadassessor')->default(0);
+            $table->integer('assessor')->default(0);
+            $table->integer('qa')->default(0);
+            $table->integer('approver')->default(0);
             $table->timestamps();
         }); 
     }
@@ -34,6 +38,6 @@ class CreateDocumentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('documentsAI');
     }
 }

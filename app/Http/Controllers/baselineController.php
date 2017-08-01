@@ -21,9 +21,8 @@ use App\NormesAssignement;
 class baselineController extends Controller
 {
 
-    public function getRoleAndSet($view,$name,$data){
+      public function getRoleAndSet($view,$name,$data){
         $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',session('currentProject'))->first()->role->role;
-        
         if($role == "Manager")
             $layout = "C_ORG_layouts.manager";
         else if($role == "Project Participant")
@@ -36,6 +35,10 @@ class baselineController extends Controller
             $layout = "AI_ORG_layouts.Assessor";
         else if($role == "Project Manager")
             $layout = "AI_ORG_layouts.ProjectManager";
+        else if($role == "Approver")
+            $layout = "AI_ORG_layouts.Approver";
+        else if($role == "QA")
+            $layout = "AI_ORG_layouts.QA";
 
         if(is_array($data))
             return view($layout.'.'.$view)->with($data)->render();
