@@ -3,7 +3,7 @@
   <h3>@lang('strings.uploadDocument') </h3>
 @if(isset($baselines))
   @if($baselines == "opened")
-      <form class="ui large form" action="/uploadFile" method="post" enctype="multipart/form-data" id="formUpload">
+      <form class="ui large form" action="/saveFile" method="post" enctype="multipart/form-data" id="formUpload">
       {{csrf_field()}}
         <div class="ui stacked segment">
           <div class="field">
@@ -25,17 +25,6 @@
   @endif
 
 @endif
-    @if(!empty($ok))
-            @if($ok == "yes")
-              <p><div class="ui green message notif_message" style="width: 50%; margin: 0 auto;">
-              <div class="header">Your files has been uploaded</div>
-          </div></p>
-      @else
-        <p><div class="ui red message notif_message" style="width: 50%; margin: 0 auto;">
-              <div class="header">Error</div>
-          </div></p>
-            @endif
-          @endif
   </div>
 </div>
 

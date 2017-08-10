@@ -111,9 +111,8 @@ $('#Next1').click(function() {
      }
   });
   if(isValid === false)
-    $('#message').show();
+    alert("Please fill in all inputs!");
   else {
-    $('#message').hide();
     $('#firsttabtitle').removeClass('active');
     $('#firsttabtitle').addClass('hidden');
     $('#secondtabtitle').addClass('active');
@@ -216,7 +215,7 @@ $(document).on('change','#appendable ',function(){
               $delete = '<td class="center aligned iceBG"><div class="ui radio checkbox"><input tabindex="0" class="hidden" type="radio" value="delete" name="role['+data.id+']"></div><i class="remove user red icon"></i></td></tr>';
               
               
-              if(data.fonction == "AI_ORG")
+              if(data.organisation == "Viattech Q&S")
                 $('#tablesort').append($fname + $lname + $fct + $org + $inputLA + $inputA + $inputPM + $inputQA + $inputApprover + $C_ORG + $delete);
               else 
                 $('#tablesort').append($fname + $lname + $fct + $org + $AI_ORG + $inputM + $inputPP + $inputG + $delete);

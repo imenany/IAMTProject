@@ -1,5 +1,6 @@
 html, body {margin: 10; height: 100%;
 	font-family: 'Lato','Helvetica Neue',Arial,Helvetica,sans-serif;
+  font-size: 6pt;
     }
 
 .slogan{
@@ -16,47 +17,73 @@ h3{
 }
 
 table{
-    margin: 1em auto;
+    margin-top: 40px;
     border-collapse: collapse;
-	font-family: 'Lato','Helvetica Neue',Arial,Helvetica,sans-serif;
-    font-size: 8pt;
-
+	   font-family: 'Lato','Helvetica Neue',Arial,Helvetica,sans-serif;
   }
-  th, td {
+
+.border {
     padding: 4px 8px;
-            text-align: left;
+    text-align: left;
+    border: 1px solid #000000;
+}
 
-  }
-  thead{
-  	    border: 1px solid #91BED4;
-  }
-  thead th {
-    background: #91BED4;
-    font-size: 8pt;
-	color: #304269;
-  }
-  tr {
-    border-right: 1px solid #91BED4;
-  }
-  tbody tr {
-    border-bottom: 1px solid #91BED4;
-  }
-  tbody th, tbody tr td {
-    border: 1px solid #91BED4;
-  }  
+.noborder{
+  background: #FFFFFF;
+}
 
+th{
+    background: #969696;
+    text-align: center;
+}
+
+.black{
+  background: #000000;
+  color: #FFFFFF;
+  font-weight: bold;
+  text-align: center;
+}
+
+.color1{
+  background: #8DB4E2;
+}
+
+.color2{
+  background: #D9D9D9;
+}
+
+.color3{
+  background: #FF0000;
+}
+
+.color4{
+  background: #FFC000;
+}
+
+.color5{
+  background: #FFFF00;
+}
+
+.color6{
+  background: #92D050;
+}
+
+
+.clear{
+    background: #FFFFFF;
+}
 
 .page {
 	page-break-after:always;
 	position: absolute;
 }
 
-  .lightYellow{
-	background: #FCFAD0;
+.O{
+	background: ##C0C0C0;
 }
 
-.darkYellow{
-	background: #B8B698;
+.R{
+	background: #FFC000;
 }
 
 .pagenum:before { content: counter(page); }

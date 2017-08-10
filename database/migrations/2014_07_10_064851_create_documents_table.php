@@ -23,6 +23,7 @@ class CreateDocumentsTable extends Migration
             $table->string('url');
             $table->boolean('valid')->default(false);
             $table->boolean('accessibility')->default(false);
+            $table->integer('evaluation_id')->default(2);
             $table->timestamps();
         }); 
     }

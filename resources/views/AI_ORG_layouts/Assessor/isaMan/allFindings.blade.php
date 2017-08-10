@@ -18,7 +18,11 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
-            <tr>
+            @if($finding->last()->valid == 0)
+                <tr class="active">
+            @else
+                <tr>
+            @endif
                 <td> {{$finding->last()->finding}} </td>
                 <td> {{$finding->last()->cycle}} </td>
                 <td> <div id="description{{$finding->last()->id}}" data-html="{{$finding->last()->description}}"> {{substr($finding->last()->description,0,50)}}...</div> </td>

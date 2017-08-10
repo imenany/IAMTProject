@@ -1,8 +1,7 @@
 
 <div class="ui grid" >
 	<div class="wide column">
-
-			<table class="ui celled table datatable">
+			<table class="ui celled table datatable" id="ListOfDocuments">
 			  <thead>
 			    <tr>
 			    	<th>@lang('strings.title')</th>
@@ -41,6 +40,5 @@
 
 </div>
     
-
     <script src="{{ URL::asset('/js/custom.js') }}"></script>
     <script src="{{ URL::asset('/js/listDocs.js') }}"></script>

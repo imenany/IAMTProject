@@ -10,6 +10,13 @@ return [
 	'thereisnobaselinemessage' => 'The is no open baseline',
 	'fillAllMessage' => 'Please fill in all the inputs',
 
+
+/*
+* ROBS
+ */
+	'comment' => 'Comment',
+
+
 /*
 * Findings 
  */
@@ -23,6 +30,7 @@ return [
 	'createdby' => 'Created By',
 	'waitingResponseClient' => 'Waiting for client\'s response',
 	'waitingResponseAssessor' => 'Waiting for assessor\'s response',
+	'waitingForReviewingCycle' => 'Reviewing cycle',
 	'responsable' => 'Responsable',
 	'response' => 'Response',
 /*
@@ -36,6 +44,8 @@ return [
 	'newDocument' => 'New document',
 	'document' => 'Document',
 	'browse' => 'Browse',
+	'missingDoc' => 'Missing Documents',
+	'addMissingDoc' => 'Add a missing document alert',
 /*
 * View user
  */
@@ -106,6 +116,7 @@ return [
 	'close' => 'close',
 	'chat' => 'Project chat',
 	'phase' => 'Phase',
+	'baseline' => 'Baseline',
 
 /**
  * _leftmenu_layout.blade.php

@@ -11,9 +11,14 @@
       </div>
     </div>
     <div id="admin_content">
-    	
 		<div class="ui grid" >
-	<div class="wide column">
+			<div class="wide column">
+			<div class="ui" id="loading_files">
+	  		<div class="ui active inverted dimmer">
+	    		<div class="ui text loader">@lang('strings.loading')</div>
+	  		</div>
+	  		<p></p>
+			</div>
 			<table class="ui selectable celled table datatable">
 			  <thead>
 			    <tr>

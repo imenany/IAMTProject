@@ -18,7 +18,11 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
-            <tr>
+            @if($finding->last()->valid == 0)
+                <tr class="active">
+            @else
+                <tr>
+            @endif
                 <td> {{$finding->last()->finding}} </td>
                 <td> {{$finding->last()->cycle}} </td>
                 <td> <div id="description{{$finding->last()->id}}" data-html="{{$finding->last()->description}}"> {{substr($finding->last()->description,0,50)}}...</div> </td>
@@ -29,7 +33,8 @@
                 <td> {{$finding->last()->created_at}} </td>
                 <td> {{$finding->last()->user->first_name}} {{$finding->last()->user->last_name}} </td>
                 <td> {{$finding->last()->updated_at}} </td>
-                <td> </td>
+                <td> <i class="add circle icon orange large link more" data-finding="{{$finding->last()->id}}"></i>
+                </td>
             </tr>
         @endforeach
         </tbody>
@@ -40,5 +45,5 @@
     
 </div>
 
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('semantic/semantic.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/style.css') }}">
+    <script src="{{ URL::asset('/js/custom.js') }}"></script>
+    <script src="{{ URL::asset('/js/listFindings.js') }}"></script>

@@ -8,6 +8,8 @@ use Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\UploadedFile;
 use App\Document;
+use App\Documentai;
+use App\Missingdoc;
 use App\Baseline;
 use App\Pparticipant;
 use App\Project;
@@ -17,34 +19,12 @@ use Auth;
 use App\User;
 use App\Norme;
 use App\NormesAssignement;
+use App\Evaluation;
+use Barryvdh\Debugbar\Facade as Debugbar;
+
 
 class documentsController extends Controller
 {
-
-      public function getRoleAndSet($view,$name,$data){
-        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',session('currentProject'))->first()->role->role;
-        if($role == "Manager")
-            $layout = "C_ORG_layouts.manager";
-        else if($role == "Project Participant")
-            $layout = "C_ORG_layouts.pparticipant";
-        else if($role == "Guest")
-            $layout = "C_ORG_layouts.guest";
-        else if($role == "Lead Assessor")
-            $layout = "AI_ORG_layouts.LeadAssessor";
-        else if($role == "Assessor")
-            $layout = "AI_ORG_layouts.Assessor";
-        else if($role == "Project Manager")
-            $layout = "AI_ORG_layouts.ProjectManager";
-        else if($role == "Approver")
-            $layout = "AI_ORG_layouts.Approver";
-        else if($role == "QA")
-            $layout = "AI_ORG_layouts.QA";
-
-        if(is_array($data))
-            return view($layout.'.'.$view)->with($data)->render();
-        else
-            return view($layout.'.'.$view)->with($name,$data)->render();
-    }
 
     public function uploadFile(){
         $baselines = Baseline::where('status','opened')->count();
@@ -52,41 +32,70 @@ class documentsController extends Controller
             $base = 'locked';
         else $base = 'opened';
         
-        return $this->getRoleAndSet('docMan.uploadFile','baselines',$base);
+        return getRoleAndSet('docMan.uploadFile','baselines',$base);
     }
 
     public function viewDocuments(){
         $baselines = Project::find(session('currentProject'))->baselines;
-        return $this->getRoleAndSet('docMan.viewDocuments','baselines',$baselines);
+        return getRoleAndSet('docMan.viewDocuments','baselines',$baselines);
     }
 
     public function listOfDocuments(){
 
         $baselines = Project::where('id',session('currentProject'))->first()->baselines;
-        return $this->getRoleAndSet('docMan.listOfDocuments','baselines',$baselines);
+        return getRoleAndSet('docMan.listOfDocuments','baselines',$baselines);
     }
 
 
     public function storeFile(Request $request){
-        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',session('currentProject'))->first()->role->role;
+        $role = Auth::user()->role;
+        $existingfiles = array();
+
         if($request->hasfile('files'))
 		{
             $fi = Input::file('files');
 			foreach ($fi as $f) {
                 $filename = $f->getClientOriginalName();
 
-                $entry = new Document;
+                if($role == "Lead Assessor" || $role == "Assessor" || $role == "Project Manager" || $role == "Approver" || $role == "QA" )
+                {
+                    $entry = new Documentai;
+                    $entry->valid = 1;
+                    $entry->accessibility = 0;
+                    $entry->title = $filename;
+                    $entry->baseline_id = Baseline::where('project_id',session('currentProject'))->where('status','opened')->get()[0]->id;
+                    $entry->url = "/public/download/".session('currentProject').'/'.$entry->baseline->version."/".$filename;
+                    
+                    $entry->user_id = Auth::user()->id;
+                    $entry->save();
 
-                $entry->title = $filename;
-                $entry->baseline_id = Baseline::where('project_id',session('currentProject'))->where('status','opened')->get()[0]->id;
-                $entry->url = "public/download/".session('currentProject').'/'.$entry->baseline->version."/".$filename;
-                $entry->valid = 0;
-                $entry->user_id = Auth::user()->id;
-                $entry->save();
-                $file = $f->storeAs("public/download/".session('currentProject').'/'.$entry->baseline->version."/",$filename);
+                    $file = $f->storeAs("/public/download/".session('currentProject').'/'.$entry->baseline->version."/",$filename);
+                }
+                else
+                {
+
+                    $search = Document::where('title',$filename)->where('baseline_id',Baseline::where('project_id',session('currentProject'))->where('status','opened')->get()[0]->id)->get()->first();
+                    if(empty($search))
+                    {
+                        $entry = new Document;
+                        $entry->valid = 0;
+                        $entry->title = $filename;
+                        $entry->baseline_id = Baseline::where('project_id',session('currentProject'))->where('status','opened')->get()[0]->id;
+                        $entry->url = "/public/download/".session('currentProject').'/'.$entry->baseline->version."/".$filename;
+                        
+                        $entry->user_id = Auth::user()->id;
+                        $entry->save();
+
+                        $file = $f->storeAs("/public/download/".session('currentProject').'/'.$entry->baseline->version."/",$filename);
+                    }
+                    else array_push($existingfiles, $filename);
+                }
+                
             }
         }
-        session(['redirect' => 'showallDocuments']);
+        Session::flash('redirect', 'showuploadFile');
+        if(!empty($existingfiles))
+            Session::flash('message', "Files : \n \n \t".implode(" \n\t",$existingfiles)." \n \n has not been uploaded (already exists in this baseline), all the other files has been uploaded, please modify them specify their version and phase");
         return back();
     }
 
@@ -100,8 +109,15 @@ class documentsController extends Controller
         $data = $request->all();
 
         $document = Document::where('id',$data['id'])->get()->first();
-        $document->valid = 1;
-        $document->save();
+        if($document->phase == null || $document->version == null)
+            return "false";
+        else {
+            $document->valid = 1;
+            $document->save();
+            return "true";
+        }
+
+        Session::flash('message', "Document validated");
     }
 
     public function rejectDocument(Request $req){
@@ -131,15 +147,31 @@ class documentsController extends Controller
     
     public function saveEditionDoc(Request $request)
     {
-        $request = (Object) $request;
-        $data = $request->all();
 
-        $document = Document::where('id',$data['document']['id'])->get()->first();
-        $document->version = $data['document']['version'];
-        $document->phase = $data['document']['phase'];
-        $document->title = $data['document']['title'];
+        $document = Document::where('id',$request->id)->get()->first();
+        $document->version = $request->version;
+        $document->phase = $request->phase;
         $document->user_id = Auth::user()->id;
         $document->valid = 0;
+        
+        if($request->hasfile('file'))
+        {   
+            Storage::delete($document->url);
+            $request->file->storeAs("/public/download/".session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version."/",$request->file->getClientOriginalName());
+            $document->url = "/public/download/".session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version."/".$request->file->getClientOriginalName();
+
+            $document->title = $request->file->getClientOriginalName();
+        }
+        else {
+            $oldTitle = $document->title;
+            $newTitle = $request->title;
+            $oldURL = $document->url;
+            $newURL = str_replace($oldTitle, $newTitle, $oldURL);
+            $document->url = $newURL;
+            $document->title = $request->title;
+            Storage::move($oldURL, $newURL);
+        }
+
         $document->save();
 
     }
@@ -153,5 +185,65 @@ class documentsController extends Controller
         $Docs = Document::where('valid','0')->get();
         return view('C_ORG_layouts.manager.docMan.validateDocs')->with('documents',$Docs);
     }
+
+    public function getMissingDocumentsView(){
+        $Docs = Missingdoc::where('project_id',session('currentProject'))->where('valid',1)->get();
+
+        return getRoleAndSet('isaMan.missingDocuments','documents',$Docs);
+    }
+
+    public function getAddMissingDocumentsAlertView(){
+        $users = Pparticipant::where('project_id',session('currentProject'))->where('role_id','>',6)->where('role_id','<',9)->orderBy('created_at')->get();
+        $normes = NormesAssignement::with('normesphase')->where('project_id',session('currentProject'))->get();
+
+        $data = array(
+            'users'  => $users,
+            'normes' => $normes
+        );
+
+        return getRoleAndSet('isaMan.newMissingDoc','data',$data);
+
+    }
+
+    public function saveNewMissingDocAlert(Request $request){
+        $request = (Object) $request;
+        $data = $request->all();
+
+        $missingDocument = new Missingdoc;
+        $missingDocument->title = $data['document']['title'];
+        $missingDocument->phase = $data['document']['phase'];
+        $missingDocument->responsable = $data['document']['responsable'];
+        $missingDocument->user_id = Auth::user()->id;
+        $missingDocument->project_id = session('currentProject');
+        $missingDocument->valid = 1;
+
+        $missingDocument->save();
+
+
+    }
+
+    public function missingDocAdded(Request $request){
+        $request = (Object) $request;
+        $data = $request->all();
+
+        $missingDocument = Missingdoc::where('id',$data['id'])->get()->first();
+        $missingDocument->valid = 0;
+
+        $missingDocument->save();
+    }
+
+    public function getEvaluationStates(Request $req){
+        
+        $states = Evaluation::all();
+        return $states;
+    }   
+
+    public function changeStatus(Request $req){
+        $request = (Object) $req;
+        $data = $request->all();
+        $document = Document::where('id',$data['document'])->get()->first();
+        $document->evaluation_id = $data['stat'];
+        $document->save();
+    }   
 
 }

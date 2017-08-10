@@ -18,30 +18,6 @@ use App\Message;
 class ProjectsController extends Controller
 {
 
-      public function getRoleAndSet($view,$name,$data){
-        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',session('currentProject'))->first()->role->role;
-        if($role == "Manager")
-            $layout = "C_ORG_layouts.manager";
-        else if($role == "Project Participant")
-            $layout = "C_ORG_layouts.pparticipant";
-        else if($role == "Guest")
-            $layout = "C_ORG_layouts.guest";
-        else if($role == "Lead Assessor")
-            $layout = "AI_ORG_layouts.LeadAssessor";
-        else if($role == "Assessor")
-            $layout = "AI_ORG_layouts.Assessor";
-        else if($role == "Project Manager")
-            $layout = "AI_ORG_layouts.ProjectManager";
-        else if($role == "Approver")
-            $layout = "AI_ORG_layouts.Approver";
-        else if($role == "QA")
-            $layout = "AI_ORG_layouts.QA";
-
-        if(is_array($data))
-            return view($layout.'.'.$view)->with($data)->render();
-        else
-            return view($layout.'.'.$view)->with($name,$data)->render();
-    }
 
     public function newprojectview(Request $request)
     {
@@ -89,22 +65,18 @@ class ProjectsController extends Controller
 
     public function getproject($id)
     {
-        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',$id)->first()->role->role;
 
         session(['currentProject' => $id]);
         session(['currentProjectName' => Project::where('id',$id)->get()->first()->title]);
-        session(['role' => $role]);
+        session(['role' => Auth::user()->role]);
         $lastbl = Baseline::where('project_id',session('currentProject'))->where('status','opened')->get();
         if(!empty($lastbl->toArray()))
         {
             $curbl = $lastbl[0]->id;
             session(['currentBaseline' => $curbl]);
         } else session(['currentBaseline' => '0.0']);
-
-
-        $role = User::find(Auth::user()->id)->pparticipants->where('project_id',$id)->first()->role->role;
         
-        return $this->getRoleAndSet('.project','data',null);
+        return getRoleAndSet('.project','data',null);
 
     }
 
@@ -167,7 +139,7 @@ class ProjectsController extends Controller
                     $pp->save();
                 } 
             }
-        return redirect()->back();
+        return redirect('/listProjects');
     }
 
     public function getintervenants(Request $request)
@@ -223,7 +195,7 @@ class ProjectsController extends Controller
 
         $array = array('project' => $project, 'users' => $users);
 
-        return $this->getRoleAndSet('isaMan.pparticipantsManagement','data',$array);
+        return getRoleAndSet('isaMan.pparticipantsManagement','data',$array);
     }
 
     public function changeParticipants(Request $req)
@@ -231,7 +203,8 @@ class ProjectsController extends Controller
         $request = (object) $req;
         $data = $request->all();
 
-        Pparticipant::where('project_id', session('currentProject'))->forceDelete();
+        Pparticipant::where('project_id', session('currentProject'))->where('role_id','!=',2)->orWhereNull('role_id')->forceDelete();
+        
         if(isset($data['role']))
         {
             foreach ($data['role'] as $user => $value) {
@@ -256,7 +229,7 @@ class ProjectsController extends Controller
         $selectednormesids = array_map('current', $project->normesassignements->toArray());
         
         $array = array('project' => $project, 'normes' => $normes, 'selectednormes' => $selectednormesids);
-        return $this->getRoleAndSet('isaMan.phasesManagement','data',$array);
+        return getRoleAndSet('isaMan.phasesManagement','data',$array);
     }
 
     public function changePhases(Request $req)
@@ -288,7 +261,7 @@ class ProjectsController extends Controller
 
 
         $array = array('project' => $project, 'normes' => $normes, 'selectednormes' => $selectednormesids);
-        return $this->getRoleAndSet('isaMan.phasesManagement','data',$array);
+        return getRoleAndSet('isaMan.phasesManagement','data',$array);
     }
 
 }

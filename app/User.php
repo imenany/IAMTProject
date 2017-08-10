@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Mail;
+use App\Pparticipant;
 
 class User extends Authenticatable
 {
@@ -59,4 +60,68 @@ class User extends Authenticatable
       });
     }
 
+    public function getRoleAttribute()
+    {
+
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        return $role;
+    }
+
+    public function getIsiaAttribute()
+    {
+
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == 'Lead Assessor' || $role == 'Assessor' || $role == 'Project Manager' || $role == 'Approver' || $role == 'QA')
+          return true;
+        else return false;
+    }
+
+    public function getIsclientAttribute()
+    {
+
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == 'Lead Assessor' || $role == 'Assessor' || $role == 'Project Manager' || $role == 'Approver' || $role == 'QA')
+          return false;
+        else return true;
+    }
+
+    public function getIsleadassessorAttribute()
+    {
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == 'Lead Assessor')
+          return true;
+        else return false;
+    }
+
+    public function getIsassessorAttribute()
+    {
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == 'Assessor')
+          return true;
+        else return false;
+    }
+
+    public function getIsprojectmanagerAttribute()
+    {
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == 'Project Manager')
+          return true;
+        else return false;
+    }
+
+    public function getIsapproverAttribute()
+    {
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == 'Approver')
+          return true;
+        else return false;
+    }
+
+    public function getIsqaAttribute()
+    {
+        $role = Pparticipant::with('project')->where('user_id',$this->id)->where('project_id',session('currentProject'))->first()->role->role;
+        if($role == 'QA')
+          return true;
+        else return false;
+    }
 }

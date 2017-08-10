@@ -16,49 +16,24 @@ use Auth;
 use App\User;
 use App\Norme;
 use App\NormesAssignement;
+use Barryvdh\Debugbar\Facade as Debugbar;
 
 
 class baselineController extends Controller
 {
 
-      public function getRoleAndSet($view,$name,$data){
-        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',session('currentProject'))->first()->role->role;
-        if($role == "Manager")
-            $layout = "C_ORG_layouts.manager";
-        else if($role == "Project Participant")
-            $layout = "C_ORG_layouts.pparticipant";
-        else if($role == "Guest")
-            $layout = "C_ORG_layouts.guest";
-        else if($role == "Lead Assessor")
-            $layout = "AI_ORG_layouts.LeadAssessor";
-        else if($role == "Assessor")
-            $layout = "AI_ORG_layouts.Assessor";
-        else if($role == "Project Manager")
-            $layout = "AI_ORG_layouts.ProjectManager";
-        else if($role == "Approver")
-            $layout = "AI_ORG_layouts.Approver";
-        else if($role == "QA")
-            $layout = "AI_ORG_layouts.QA";
-
-        if(is_array($data))
-            return view($layout.'.'.$view)->with($data)->render();
-        else
-            return view($layout.'.'.$view)->with($name,$data)->render();
-    }
 
     public function newBaseline()
     {
     	$exists = Project::find(session('currentProject'))->baselines->sortByDesc('updated_at')->first();
 
     	if($exists)
-    		{
-    			//$documents = $exists->documents;
-    			//dd($documents);
-    			$status = $exists->status;
-    			if(!strcmp($status, "locked"))
-	    			return view("C_ORG_layouts.manager.baselineMan.newBaseline")->with('exists',$exists);
-	    		else if(!strcmp($status, "opened"))
-                    return view("C_ORG_layouts.manager.baselineMan.newBaseline")->with('exists',$exists);
+    	{
+			$status = $exists->status;
+			if(!strcmp($status, "locked"))
+    			return view("C_ORG_layouts.manager.baselineMan.newBaseline")->with('exists',$exists);
+    		else if(!strcmp($status, "opened"))
+                return view("C_ORG_layouts.manager.baselineMan.newBaseline")->with('exists',$exists);
 	    }
 
 	    return view("C_ORG_layouts.manager.baselineMan.newBaseline")->with('exists','false');
@@ -82,29 +57,43 @@ class baselineController extends Controller
     	$new_baseline->status = 'opened';
     	$new_baseline->save();
         $fields = $request->except('_token');
-       //	 dd($fields);
-       //	 
-        foreach ($fields as $f) {
-        	if(!(Input::file($f)))
-        	{
-		        $filename = $f->getClientOriginalName();
-		        $file = $f->storeAs("public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/",$filename);
-		        $entry = new Document;
-                $entry->title = $filename;
-                $entry->valid = 0;
-		        $entry->baseline_id = $new_baseline->id;
-		        $entry->url = "public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/".$filename;
-		        $entry->save();
-	    	}
-        }
+        $fields = $fields['field'];
 
-        session(['redirect' => 'showallBaselines']);
+        $files = array();
+
+
+        foreach ($fields as $f) {
+            	
+                if(!(Input::file($f['file'])))
+            	{
+                    if($f['version'] == null)
+                        array_push($files, $f['file']->getClientOriginalName());
+
+        		        $filename = $f['file']->getClientOriginalName();
+        		        $file = $f['file']->storeAs("public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/",$filename);
+        		        $entry = new Document;
+                        $entry->title = $filename;
+                        $entry->valid = 0;
+                        $entry->version = $f['version'];
+        		        $entry->baseline_id = $new_baseline->id;
+        		        $entry->url = "/public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/".$filename;
+        		        $entry->save();
+    	    	}
+            
+        }
+        if(!empty($files))
+            Session::flash('message', "Files : \n \n \t".implode(" \n\t",$files)." \n \n has no version, please modify them specify their version and phase");
+
+        Session::flash('redirect', 'showallBaselines');
+
         return back();
     }
 
 	public function updateBaseline(Request $request)
     {
 		$fields = $request->except('_token');
+        $fields = $fields['field'];
+
     	//dd($fields);
     	$last_baseline = Baseline::where('project_id',session('currentProject'))->where('status','locked')->get()->sortByDesc('updated_at')->first();
 
@@ -114,21 +103,40 @@ class baselineController extends Controller
     	$new_baseline->project_id = session('currentProject');
     	$new_baseline->save();
 
+        $files = array();
     	
         foreach ($fields as $f) {
-        	if(!(Input::file($f)))
+            Debugbar::addMessage($f, 'f');
+            if(array_key_exists('file',$f))
         	{
-		        $filename = $f->getClientOriginalName();
-		        $file = $f->storeAs("public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/",$filename);
-		        $entry = new Document;
-		        $entry->title = $filename;
-		        $entry->baseline_id = $new_baseline->id;
-		        $entry->url = "public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/".$filename;
-		        $entry->save();
-	    	}
+                Debugbar::addMessage(null, 'exists');
+                if(!(Input::file($f['file'])))
+    		      {
+                    $filename = $f['file']->getClientOriginalName();
+    		        $file = $f['file']->storeAs("public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/",$filename);
+    		        $entry = new Document;
+    		        $entry->title = $filename;
+                    $entry->version = $f['version'];
+                    $entry->baseline_id = $new_baseline->id;
+                    $entry->user_id = Auth::user();
+    		        $entry->url = "public/download/".session('currentProject').'/'.Baseline::find($new_baseline->id)->version."/".$filename;
+    		        $entry->save();
+                  }
+            }else{
+                Debugbar::addMessage(null, 'noo');
+                $oldID = $f['oldFile'];
+                $oldDoc = Document::where('id',$oldID)->get()->first();
+                $entry = $oldDoc->replicate();
+                $entry->baseline_id = $new_baseline->id;
+                $entry->save();
+                array_push($files, $entry->title);
+            }
         }
 
-        session(['redirect' => 'showallBaselines']);
+        if(!empty($files))
+            Session::flash('message', "Files : \n \n \t".implode(" \n\t",$files)." \n \n has not been updated!");
+
+        Session::flash('redirect', 'showallBaselines');
         return back();
     }
 
@@ -136,18 +144,18 @@ class baselineController extends Controller
 
     public function listOfBaselines(){
         $baselines = Project::where('id',session('currentProject'))->first()->baselines;
-        return $this->getRoleAndSet('docMan.listOfBaselines','baselines',$baselines);
+        return getRoleAndSet('docMan.listOfBaselines','baselines',$baselines);
     }
 
     public function getOpenCloseBaselineView()
     {
         $baselines = Project::where('id',session('currentProject'))->get()->first()->baselines;
-        return $this->getRoleAndSet('baselineMan.openclosebaseline','baselines',$baselines);
+        return getRoleAndSet('baselineMan.openclosebaseline','baselines',$baselines);
     }
 
     public function getLockBaselineView(){
         $baseline = Project::where('id',session('currentProject'))->get()->first()->baselines->sortByDesc('created_at')->first();
-        return $this->getRoleAndSet('baselineMan.lockbaseline','baseline',$baseline);
+        return getRoleAndSet('baselineMan.lockbaseline','baseline',$baseline);
     }
 
     public function closeBaselineRequest(Request $req){

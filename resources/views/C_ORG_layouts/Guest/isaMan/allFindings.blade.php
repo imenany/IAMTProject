@@ -18,6 +18,7 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
+            @if($finding->last()->accessibilty == 1)
             <tr>
                 <td> {{$finding->last()->finding}} </td>
                 <td> {{$finding->last()->cycle}} </td>
@@ -29,8 +30,9 @@
                 <td> {{$finding->last()->created_at}} </td>
                 <td> {{$finding->last()->user->first_name}} {{$finding->last()->user->last_name}} </td>
                 <td> {{$finding->last()->updated_at}} </td>
-                <td> </td>
+                <td> <i class="add circle icon orange large link more" data-finding="{{$finding->last()->id}}"></i></td>
             </tr>
+            @endif
         @endforeach
         </tbody>
       </table>
@@ -40,5 +42,6 @@
     
 </div>
 
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('semantic/semantic.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/style.css') }}">
+    <script src="{{ URL::asset('/js/custom.js') }}"></script>
+    <script src="{{ URL::asset('/js/listFindings.js') }}"></script>
+

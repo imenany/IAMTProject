@@ -25,15 +25,19 @@
 <div class="ui modal" id="EditDocument">
 	{{ csrf_field() }}
   <i class="close icon"></i>
-  <div class="header">Edit project</div>
+  <div class="header">Edit document</div>
   <div class="content">
-		<form class="ui form" method="post" id="edit_doc_form">
+		<form class="ui form" method="post" id="edit_doc_form" enctype="multipart/form-data">
 		<table class="ui definition table">
 		<input name="document[id]" class="hidden">
 		  <tbody>
 		    <tr>
 		      <td class="two wide column">Title</td>
 		      <td><input name="document[title]" ></td>
+		    </tr>
+		    <tr>
+		      <td class="two wide column">File</td>
+		      <td> <input type="file" name="document[file]" /></td>
 		    </tr>
 		    <tr>
 		      <td class="two wide column">Phase</td>
@@ -51,7 +55,7 @@
 		    </tr>
 		    <tr>
 		      <td class="two wide column">Version</td>
-		      <td> <input name="document[version]" ></td>
+		      <td> <input name="document[version]" type='number' step="0.1"></td>
 		    </tr>
 		  </tbody>
 		</table>
@@ -59,7 +63,7 @@
 		<div class="ui grid segment">
 			<div class="ui twelve wide column"></div>
 			<div class="ui four wide column">
-		        <button class="fluid yellow ui button" id="SubmitChanges">@lang('strings.save')</button>
+		        <button class="fluid yellow ui button" id="SubmitEditDocument">@lang('strings.save')</button>
 		    </div>
 	    </div>
 		</form>
@@ -303,6 +307,51 @@
 		        <div class="fluid yellow ui button save" id="submitModification">@lang('strings.save')</div>
 		    </div>
 	    </div>
+		</form>
+	</div>
+</div>
+
+<div class="ui modal" id="addRobsCommentModal">
+	{{ csrf_field() }}
+  <i class="close icon"></i>
+  <div class="header" id="finding_nameA">Add comment </div>
+  <div class="content">
+		<form class="ui form" id="comment_ROBS_form">
+		<table class="ui definition table">
+		<input name="userid" class="hidden">
+		<input name="robsid" class="hidden">
+		  <tbody>
+            <tr>
+              <td class="two wide column">@lang('strings.comment')</td>
+              <td><textarea name="comment"></textarea></td>
+            </tr>
+		  </tbody>
+		</table>
+		<div class="ui red message hidden" id="message">@lang('strings.fillAllMessage')</div>
+		<div class="ui grid segment">
+			<div class="ui twelve wide column"></div>
+			<div class="ui four wide column">
+		        <div class="fluid yellow ui button save" id="addFindingComment">@lang('strings.save')</div>
+		    </div>
+	    </div>
+		</form>
+	</div>
+</div>
+
+<div class="ui modal" id="showRobsCommentsModal">
+	{{ csrf_field() }}
+  <i class="close icon"></i>
+  <div class="header" id="finding_nameA">Show Comments</div>
+  <div class="content">
+		<form class="ui form" id="comment_ROBS">
+		<table class="ui definition table">
+		<input name="userid" class="hidden">
+		<input name="robsid" class="hidden">
+		  <tbody id="robscommentsbody">
+            
+		  </tbody>
+		</table>
+		<div class="ui red message hidden" id="message">@lang('strings.fillAllMessage')</div>
 		</form>
 	</div>
 </div>

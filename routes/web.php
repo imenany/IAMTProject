@@ -37,12 +37,10 @@ Route::group(['middleware' => 'otherUsers'], function() {
 		Route::post('/addFinding','FindingsController@getAddFindingView');
 		Route::post('/savefindingRequest','FindingsController@addNewFinding');
 
-		Route::post('/modifyFinding','FindingsController@getModifiyFindingView');
 		Route::post('/modifiedFindings','FindingsController@getModifiedFindingsView');
 
-		//- Document 
-		Route::post('/uploadDocument','documentsController@uploadFile');
-		
+
+
 	});
 
 
@@ -73,9 +71,7 @@ Route::group(['middleware' => 'otherUsers'], function() {
 		Route::post('/uploadFile','documentsController@uploadFile')->name('uploadFile');
 		Route::post('/storeFile','documentsController@storeFile');
 		Route::get('/deleteFile/{id}','documentsController@deleteFile');	      
-		Route::get('/modifyDoc','documentsController@modifyDoc');
 		Route::get('/editDocument','documentsController@editDocument');
-		Route::post('/saveEditionDoc','documentsController@saveEditionDoc');
 
 	});
 
@@ -90,10 +86,6 @@ Route::group(['middleware' => 'otherUsers'], function() {
 	Route::get('/listProjectIntervenantsRequest', 'ProjectsController@getProjectintervenants');
 	Route::get('/getProjectIntervenantRequest', 'ProjectsController@gettheintervenant');
 
-	/* ********* Project Documents Accessibility ****************/
-	Route::post('/documentsAccessibility','ProjectsController@geDocumentsAccessibilityView');
-
-
 	/*********** Findings Routes ****************/
 	Route::post('/allFindings','FindingsController@getAllFindingsView');
 	Route::get('/getFindingData','FindingsController@getFindingData');
@@ -101,19 +93,52 @@ Route::group(['middleware' => 'otherUsers'], function() {
 	Route::post('/displayFinding','FindingsController@getDisplayFindingView');
 	Route::post('/saveFindingResponseA','FindingsController@saveFindingResponseA');
 	Route::post('/saveFindingModification','FindingsController@saveFindingModification');
+	Route::post('/modifyFinding','FindingsController@getModifiyFindingView');
+	Route::post('/validateFinding','FindingsController@validateFinding');
+	Route::post('/rejectFinding','FindingsController@rejectFinding');
+
+	/*********** Evaluation States **************/
+	Route::get('getEvaluationStates', 'documentsController@getEvaluationStates');
+	Route::post('changeStatus', 'documentsController@changeStatus');
+
+	/*********** Documents Routes ****************/
+
+	Route::post('missingDocuments','documentsController@getMissingDocumentsView');
+	Route::post('addMissingDocumentAlert','documentsController@getAddMissingDocumentsAlertView');
+	Route::post('saveNewMissingDocAlert','documentsController@saveNewMissingDocAlert');
+	Route::post('MissingDocAdded','documentsController@missingDocAdded');
+	Route::post('/uploadDocument','documentsController@uploadFile');
+	Route::post('/saveFile','documentsController@storeFile');
+	Route::get('/modifyDoc','documentsController@modifyDoc');
+	Route::post('/saveEditionDoc','documentsController@saveEditionDoc');
 
 	/*********** ROBS Routes ****************/
-	Route::post('/generateROBSView','FindingsController@getGenerateROBSView');
-	Route::get('/generateROBSPDF','FindingsController@generateROBSPDF');
-	Route::get('/generateROBSXLS','FindingsController@generateROBSXLS');
-	Route::post('/downloadROBS','FindingsController@generateROBS');
+	Route::post('/generateROBSView','RobsController@getGenerateROBSView');
+	Route::get('/generateROBSPDF','RobsController@generateROBSPDF');
+	Route::get('/generateROBSXLS','RobsController@generateROBSXLS');
+	Route::post('/downloadROBS','RobsController@generateROBS');
+
+
+	/*********** Cycle Review Routes ********/
+	Route::post('/getallROBSView','RobsController@getallROBSView');
+	Route::post('/validateROBS','RobsController@validateROBS');
+	Route::post('/unValidateROBS','RobsController@unValidateROBS');
+	Route::get('/getLastComment','RobsController@getLastComment');
+	Route::post('/saveROBSComment','RobsController@saveROBSComment');
+	Route::get('/getROBSComments','RobsController@getROBSComments');
+
+	/* ********* Project Documents Accessibility ****************/
+	Route::post('/documentsAccessibility','RobsController@geDocumentsAccessibilityView');
+	Route::post('/hideDoc','RobsController@hideDoc');
+	Route::post('/showDoc','RobsController@unhideDoc');
+
 
 	/*********** CHAT Routes ****************/
 	Route::get('/listProjectMessages','ProjectsController@getMessages');
 	Route::get('/addMessage','ProjectsController@addMessage');
 
 
-	
+
 	Route::post('/allBaselines','baselineController@listOfBaselines');
 	Route::get('listProjectsRequest', 'ProjectsController@getprojects');
 	Route::post('/viewDocuments','documentsController@viewDocuments');

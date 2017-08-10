@@ -13,7 +13,6 @@
             <th>@lang('strings.createdat')</th>
             <th>@lang('strings.createdby')</th>
             <th>@lang('strings.updatedat')</th>
-            <th>@lang('strings.action')</th>
           </tr>
           </thead>
         <tbody>
@@ -35,13 +34,6 @@
                 <td> {{$finding->created_at}} </td>
                 <td> {{$finding->user->first_name}} {{$finding->user->last_name}} </td>
                 <td> {{$finding->updated_at}} </td>
-                <td>
-                    @if($finding->id == $findings->last()->id && strpos($finding->cycle, 'R') !== false)
-                        <i class="reply icon orange large link responseA" data-finding="{{$finding->id}}"></i>
-                    @elseif($finding->id == $findings->last()->id && strpos($finding->cycle, 'O') !== false)
-                        @lang('strings.waitingResponseClient')
-                    @endif
-                </td>
             </tr>
         @endforeach
         </tbody>

@@ -16,6 +16,12 @@
         });
     });
 
+    $('#showuploadFile2').click(function(event) {
+        $.post('/uploadDocument', function(data, textStatus, xhr) {
+            $("#doc_man_content").html(data);
+        });
+    });
+
     $('#showlockBaseline').click(function(event) {
         $.post('/lockBaseline', function(data, textStatus, xhr) {
             $("#doc_man_content").html(data);
@@ -101,6 +107,14 @@
         });
     });
 
+
+    $('#showQualityReview').click(function(event) {
+        $.post('/getallROBSView', function(data, textStatus, xhr) {
+            $("#page_title").html("Cycle Review");
+            $("#ISA_content").html(data);
+        });
+    });
+
     $('#showProjPhasesMan').click(function(event) {
         $.post('/projectPhases', function(data, textStatus, xhr) {
             $("#page_title").html("Project Phases Management");
@@ -122,12 +136,32 @@
         });
     });
 
+    $('#showMissingDocument').click(function(event) {
+        $.post('/missingDocuments', function(data, textStatus, xhr) {
+            $("#page_title").html("Missing documents");
+            $("#ISA_content").html(data);
+        });
+    });
+
+    $('#showAddMissingDocument').click(function(event) {
+        $.post('/addMissingDocumentAlert', function(data, textStatus, xhr) {
+            $("#page_title").html("Add Missing Document Alert");
+            $("#ISA_content").html(data);
+        });
+    });
+
 
     $redirectTo = ("#"+$('#redirect').html()).replace(/\s/g, '');
-
 
     $(document).ready(function() {
       setTimeout(function() {
         $($redirectTo).trigger('click');
-      }, 500);
+        if($('#pagemessage').html() != '')
+            alert($('#pagemessage').html());
+      }, 100);      
+
+    });
+
+     $('#pagemessage').bind("DOMSubtreeModified",function(){
+        alert($('#pagemessage').html());
     });

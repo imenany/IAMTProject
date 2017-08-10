@@ -5,46 +5,42 @@ function isValidEmailAddress(emailAddress) {
 
 
 $('#SaveUser').click(function(event) {
+
 	event.preventDefault();
-	  var isValid;
+	var isValid;
 	$("input[name^='user']").each(function() {
-	 var element = $(this);
-	 if (element.val() == "") {
-	     isValid = false;
-	 }
+		 var element = $(this);
+		 if (element.val() == "") {
+		     isValid = false;
+		 }
 	});
 	console.log($("input[name='user[email]']").val());
-	 if(!isValidEmailAddress($("input[name='user[email]']").val()))
-	 {
+	if(!isValidEmailAddress($("input[name='user[email]']").val()))
+	{
 	 	isValid = false;
-	 }
+	}
 
 	if(isValid === false)
-		$('#message').show();
-	else {
-		$('#message').hide();
+		alert('Please fill in all inputs');
 
-	    $data = $('#form').serialize();
+	else {
+			$('#Saving').show();
+
 	    $.ajax({
 	      url: '/saveNewUser',
 	      type: 'POST',
-	      data: $('#form').serialize()
-	    }).done(function() {
-	    	$('#user_saved_modal')
-			    .modal({
-			        closable  : false,
-			        onDeny: function(){
-			        	location.href = "/listUsers";
-			        },
-			        onApprove: function(){
-			        	location.href = "/newUser";
-			        }
-			    })
-			    .modal('show');
-			})
-			.fail(function() {
-				$('#email_already_taken').modal('show');
-			})
+	      data: $('#form').serialize(),
+	      success: function (data) {
+	          alert('User has been saved.');
+	          location.href = '/listUsers';
+	      }
+        }).done(function() {
+        	$('#Saving').hide();
+		})
+		.fail(function() {
+			$('#Saving').hide();
+			alert('This is email is already taken, please try again with a new email. Thank you.');
+		})
 	}
 
 });

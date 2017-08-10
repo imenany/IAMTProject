@@ -15,14 +15,16 @@
 			  <tbody>
 				@foreach($baselines as $baseline)
 					@foreach($baseline->documents as $doc)
-				    <tr>
-						<td><strong><a class="previewimage" download href="{{str_replace("public/", "storage/", $doc->url)}}" data-html="<img src='{{str_replace("public/", "storage/", $doc->url)}}' width='200px'alt='no preview available'>">{{$doc->title}}</a></strong></td>
-						<td>{{$doc->baseline->version}}</td>
-						<td>@if($doc->phase){{$doc->normesphase->name}}@endif</td>
-						<td>{{$doc->version}}</td>
-						<td>{{$doc->created_at}}</td>
-						<td>{{$doc->updated_at}}</td>
-				    </tr>
+					@if($doc->valid == 1)
+					    <tr>
+							<td><strong><a class="previewimage" download href="{{str_replace("public/", "storage/", $doc->url)}}" data-html="<img src='{{str_replace("public/", "storage/", $doc->url)}}' width='200px'alt='no preview available'>">{{$doc->title}}</a></strong></td>
+							<td>{{$doc->baseline->version}}</td>
+							<td>@if($doc->phase){{$doc->normesphase->name}}@endif</td>
+							<td>{{$doc->version}}</td>
+							<td>{{$doc->created_at}}</td>
+							<td>{{$doc->updated_at}}</td>
+					    </tr>
+				    @endif
 				    @endforeach
 				@endforeach
 			  </tbody>

@@ -26,6 +26,8 @@
     @include('Admin_layouts._leftmenu_layout')
     @include('Admin_layouts._usermenu_layout')
     @include('Admin_layouts._modals_layout')
+    <div id="pagemessage" hidden>@if(\Session::has('message')) {{session('message')}} @endif</div>
+
     @yield('body')    
 
 </body>

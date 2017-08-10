@@ -9,9 +9,6 @@
                   <i class="search icon"></i>
             </div>
         </a>
-        <div class="header item">
-          <h3 class="ui header" id="doc_title"></h3>
-      </div>
         <div class="item right">
             <i class="sort descending icon link" id="show_man"></i>
       </div>

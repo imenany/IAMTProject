@@ -11,6 +11,11 @@ class Baseline extends Model
 		return $this->hasMany('App\Document');
 	}
 
+	public function documentsai()
+	{
+		return $this->hasMany('App\Documentai');
+	}
+
 	public function project()
 	{
         return $this->belongsTo('App\Project');

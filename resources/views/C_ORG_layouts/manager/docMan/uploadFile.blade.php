@@ -18,7 +18,9 @@
           </div>
         </div>
       </form>
-
+    @if (Session::has('message'))
+       <div class="alert alert-info">{{ Session::get('message') }}</div>
+    @endif
   @else 
   <p><div class="ui red message notif_message" style="width: 50%; margin: 0 auto;">
                 <div class="header">@lang('strings.thereisnobaselinemessage')</div>

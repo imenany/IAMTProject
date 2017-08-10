@@ -1,11 +1,16 @@
-  $(".datatable").on('click', '.more', function(event) {
+  $("#findingstable").on('click', '.more', function(event) {
       $id = $(this).data('finding');
       $.post('/displayFinding',{ 'id' : $id }, function(data, textStatus, xhr) {
             $("#ISA_content").html(data);
       });
   });
 
-  $(".datatable").on('click', '.response', function(event) {
+    $('#Loading').show();
+    setTimeout(function() {
+        $('#Loading').fadeOut('fast');
+    }, 20);
+
+  $("#findingstable").on('click', '.response', function(event) {
 
     $id = $(this).data('finding');
     $('#addResponseModal').modal({
@@ -48,20 +53,29 @@
                     });
                   },
         onApprove : function() {
+                    if (confirm('Are you sure you want to send this response?')) {
                       $.ajax({
                         url: '/saveFindingResponse',
                         type: 'POST',
-                        data: $('#response_finding_form').serialize()
+                        data: $('#response_finding_form').serialize(),
+                        success: function (data){
+                          $('#Saving').show();
+                          setTimeout(function() {
+                              $('#Saving').fadeOut('fast');
+                          }, 200);
+                          alert('Your response has been saved, you will get the assessors response as soon as possible.');
+                        }
                       }).done(function() {
                           $('#showAllFindings').trigger('click');
                       });
+                    }
 
                   }
     }).modal('show');
 });
 
 
-  $(".datatable").on('click', '.responseA', function(event) {
+  $("#findingstable").on('click', '.responseA', function(event) {
     $id = $(this).data('finding');
 
     $('#addResponseAModal').modal({
@@ -96,7 +110,6 @@
                               }));
                           });
 
-
                           $("select[name='finding[severityA]']").val(data.finding.severity);
                           $("select[name='finding[responsableA]']").val(data.finding.responsable);
                           $("select[name='finding[documentA]']").val(data.finding.document_id);
@@ -104,21 +117,28 @@
                     });
                   },
         onApprove : function() {
+                    if (confirm('Are you sure you want to send this response?')) {
                       $.ajax({
                         url: '/saveFindingResponseA',
                         type: 'POST',
-                        data: $('#responseA_finding_form').serialize()
+                        data: $('#responseA_finding_form').serialize(),
+                        success: function (data){
+                          $('#Saving').show();
+                          setTimeout(function() {
+                              $('#Saving').fadeOut('fast');
+                          }, 200);                          
+                          alert('Your response has been saved, it will be reviewed as soon as possible.');
+                        }
                       }).done(function() {
                           $('#showAllFindings').trigger('click');
                       });
-
+                    }
                   }
     }).modal('show');
 
   });
 
-
-  $(".datatable").on('click', '.editFinding', function(event) {
+  $("#findingstable").on('click', '.editFinding', function(event) {
     $id = $(this).data('finding');
 
     $('#editFindingModal').modal({
@@ -161,24 +181,96 @@
                     });
                   },
         onApprove : function() {
+                    if (confirm('Are you sure you want to save these moddifications?')) {
                       $.ajax({
                         url: '/saveFindingModification',
                         type: 'POST',
-                        data: $('#modify_finding_form').serialize()
-                      }).done(function() {
+                        data: $('#modify_finding_form').serialize(),
+                        success: function (data){
+                          $('#Saving').show();
+                          setTimeout(function() {
+                              $('#Saving').fadeOut('fast');
+                          }, 200);
+                          alert('Your modification has been saved.');
+                        }
+                        }).done(function() {
                           $('#showAllFindings').trigger('click');
                       });
-                      
+                    }
                   }
     }).modal('show');
 
   });
+
+
+
+  $("#findingstable").on('click', '.validate', function(event) {
+    if(confirm('Are you sure you want to validate this finding?'))
+    {
+      $id = $(this).data('finding');
+      $validate = $(this);
+      $remove = $(this).parent('td').children('.remove');
+
+      $.ajax({
+        url: '/validateFinding',
+        type: 'POST',
+        data: {'id': $id},
+        success: function(){
+        $('#Saving').show();
+        setTimeout(function() {
+            $('#Saving').fadeOut('fast');
+        }, 200);
+          alert("Finding validated!");
+        }
+      })
+      .done(function() {
+        $validate.parent('td').parent('tr').removeClass('active');
+        $validate.parent('td').children('div').show();
+        $validate.remove();
+        $remove.remove();
+      });
+    }
+  });
+
+  $("#findingstable").on('click', '.remove', function(event) {
+    if(confirm('Are you sure you want to remove this finding?'))
+    {
+      $id = $(this).data('finding');
+      $ToValidate = $(this);
+      $ToEdit = $(this).parent('td').children('.validate');
+      $ToRemove = $(this).parent('td').parent('tr');
+
+      $.ajax({
+        url: '/rejectFinding',
+        type: 'POST',
+        data: {'id': $id},
+        success: function(){
+          $('#Saving').show();
+          setTimeout(function() {
+              $('#Saving').fadeOut('fast');
+          }, 200);
+        }
+      })
+      .done(function() {
+        $ToRemove.remove();
+        $('#showAllFindings').trigger('click');
+      })
+    }
+  });
+
+
+
+
 
   $('#generateROBSPDFButton').click(function(event) {
     $.ajax({
       url: '/generateROBSPDF',
       data: $('#GenerateROBSForm').serialize(),
       success: function (data) {
+        $('#Loading').show();
+        setTimeout(function() {
+            $('#Loading').fadeOut('fast');
+        }, 20);
         $url = data.replace("public/","");
         $('#download').attr({
           href: "/storage/"+$url,
@@ -196,6 +288,10 @@
       url: '/generateROBSXLS',
       data: $('#GenerateROBSForm').serialize(),
       success: function (data) {
+        $('#Loading').show();
+        setTimeout(function() {
+            $('#Loading').fadeOut('fast');
+        }, 20);
         $url = data.replace("public/","");
         $('#download').attr({
           href: "/storage/"+$url,
@@ -211,7 +307,7 @@
 
 
 
-  $('.datatable').DataTable({
+  $('#findingstable').DataTable({
         "pageLength": 5,
         "lengthMenu": [ 5, 10, 15 ],
         "bDestroy": true,

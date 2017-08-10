@@ -10,15 +10,14 @@
 	        <th class="center aligned" rowspan="3">@lang('strings.lastname')</th>
 	        <th class="center aligned" rowspan="3" >@lang('strings.fonction')</th>
 	        <th class="center aligned" rowspan="3" >@lang('strings.organisation')</th>
-	        <th class="center aligned" colspan="8">@lang('strings.role')</th>
+	        <th class="center aligned" colspan="7">@lang('strings.role')</th>
 	        <th class="center aligned" rowspan="3" >@lang('strings.delete')</th>
 	      </tr>
 	      <tr>
-	        <th class="center aligned actif" colspan="5">ISA</th>
+	        <th class="center aligned actif" colspan="4">ISA</th>
 	        <th class="center aligned actif" colspan="3">Organisation</th>						      
 	      </tr>
 	      <tr>
-	        <th class="center aligned">@lang('strings.leadassessor')</th>
 	        <th class="center aligned">@lang('strings.assessor')</th>
 	        <th class="center aligned">@lang('strings.projectManager')</th>
 	        <th class="center aligned">@lang('strings.QA')</th>
@@ -39,12 +38,8 @@
 		        <td class="iceBG"><b>{{$participant->user->last_name}}</b></td>
 		        <td>{{$participant->user->fonction}}</td>
 		        <td>{{$participant->user->organisation}}</td>
-		        @if($participant->user->fonction == "AI_ORG")
-			  	<td class="center aligned">
-			        <div class="ui radio checkbox">
-			        <input name="role[{{$participant->user->id}}]" {!! (strcmp($participant->role->role,'Lead Assessor')) == 0 ? 'checked': 'null' !!} tabindex="0" class="hidden" type="radio" value="Lead Assessor"/>	
-			      </div>
-			  	</td>
+		        @if($participant->user->organisation == "Viattech Q&S")
+
 			  	<td class="center aligned">
 			        <div class="ui radio checkbox">
 			        <input name="role[{{$participant->user->id}}]" {!! (strcmp($participant->role->role,'Assessor')) == 0 ? "checked": 'null' !!} tabindex="0" class="hidden" type="radio" value="Assessor"/>	
@@ -67,7 +62,7 @@
 			  	</td>
 			  	<td colspan="3" class="active"></td>
 			  	@else
-			  	<td colspan="5" class="active"></td>
+			  	<td colspan="4" class="active"></td>
 			  	<td class="center aligned">
 			      	<div class="ui radio checkbox">
 			        <input name="role[{{$participant->user->id}}]" {!! (strcmp($participant->role->role,'Manager')) == 0 ? 'checked': 'null' !!} tabindex="0" class="hidden" type="radio" value="Manager">

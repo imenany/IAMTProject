@@ -1,42 +1,50 @@
-$(".datatable").on('click', '.open', function(event) {
-	$id = $(this).data('baseline');
-	$lock = '<i class="lock red large link icon lock" data-baseline="'+$id+'"></i><span class="lock">lock</span>';
-	$.ajax({
-		url: '/openBaselineRequest',
-		type: 'POST',
-		data: {"id" : $id},
-		success: function (data) {
-			
-    	}
-	}).done(function() {
-		$('#loading_files').show();
-		setTimeout(function() {
-            $('#loading_files').fadeOut('fast');
-        }, 650); 
+$("#BaselinesLockTable").on('click', '.open', function(event) {
+	if(confirm("Are you sure you want to open this baseline ?"))
+	{
+		$('#Saving').show();
 
-		$('.open').parent().html($lock);
-        $('.status').html('opened');
+		$id = $(this).data('baseline');
+		$lock = '<i class="lock red large link icon lock" data-baseline="'+$id+'"></i><span class="lock">lock</span>';
+			$.ajax({
+				url: '/openBaselineRequest',
+				type: 'POST',
+				data: {"id" : $id},
+				success: function (data) {
+					
+		    	}
+			}).done(function() {
+				setTimeout(function() {
+		            $('#Saving').fadeOut('fast');
+		        }, 20); 			
 
-	});
+				$('.open').parent().html($lock);
+		        $('.status').html('opened');
+
+			});
+	}
 });
 
-$(".datatable").on('click', '.lock', function(event) {
-	$id = $(this).data('baseline');
-	$open = '<i class="check square green outline large link icon open" data-baseline="'+$id+'"></i><span class="open">open</span>'
-	$.ajax({
-		url: '/lockBaselineRequest',
-		type: 'POST',
-		data: {"id" : $id},
-		success: function (data) {
-			console.log(data);
-    	}
-	}).done(function() {
-		$('#loading_files').show();
-		setTimeout(function() {
-            $('#loading_files').fadeOut('fast');
-        }, 650); 
+$("#BaselinesLockTable").on('click', '.lock', function(event) {
+	if(confirm("Are you sure you want to lock this baseline ?"))
+	{
+		$('#Saving').show();
 
-		$('.lock').parent().html($open);
-        $('.status').html('locked');
-	});
-});
+		$id = $(this).data('baseline');
+		$open = '<i class="check square green outline large link icon open" data-baseline="'+$id+'"></i><span class="open">open</span>';
+			$.ajax({
+				url: '/lockBaselineRequest',
+				type: 'POST',
+				data: {"id" : $id},
+				success: function (data) {
+					console.log(data);
+		    	}
+			}).done(function() {
+				setTimeout(function() {
+		            $('#Saving').fadeOut('fast');
+		        }, 20); 
+
+				$('.lock').parent().html($open);
+		        $('.status').html('locked');
+			});
+	}});
+

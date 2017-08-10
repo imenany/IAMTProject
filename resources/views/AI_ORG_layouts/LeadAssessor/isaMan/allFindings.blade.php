@@ -1,5 +1,6 @@
 <div class="ui grid" >
   <div class="wide column">
+
       <table class="ui celled table datatable" id="findingstable">
         <thead>
           <tr>
@@ -18,19 +19,29 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
-            <tr>
-                <td> {{$finding->last()->finding}} </td>
-                <td> {{$finding->last()->cycle}} </td>
-                <td> <div id="description{{$finding->last()->id}}" data-html="{{$finding->last()->description}}"> {{substr($finding->last()->description,0,50)}}...</div> </td>
-                <td> {{$finding->last()->document->title}} </td>
-                <td> <div id="recommendation{{$finding->last()->id}}" data-html="{{$finding->last()->recommendation}}"> {{substr($finding->last()->recommendation,0,20)}}...</div> </td>
-                <td> {{$finding->last()->status}} </td>
-                <td> {{$finding->last()->severity}} </td>
-                <td> {{$finding->last()->created_at}} </td>
-                <td> {{$finding->last()->user->first_name}} {{$finding->last()->user->last_name}} </td>
-                <td> {{$finding->last()->updated_at}} </td>
-                <td> <i class="add circle icon orange large link more" data-finding="{{$finding->last()->id}}"></i></td>
-            </tr>
+            @if($finding->last()->valid == 0)
+                <tr class="active">
+            @else
+                <tr>
+            @endif
+                    <td> {{$finding->last()->finding}} </td>
+                    <td> {{$finding->last()->cycle}} </td>
+                    <td> <div id="description{{$finding->last()->id}}" data-html="{{$finding->last()->description}}"> {{substr($finding->last()->description,0,50)}}...</div> </td>
+                    <td> {{$finding->last()->document->title}} </td>
+                    <td> <div id="recommendation{{$finding->last()->id}}" data-html="{{$finding->last()->recommendation}}"> {{substr($finding->last()->recommendation,0,20)}}...</div> </td>
+                    <td> {{$finding->last()->status}} </td>
+                    <td> {{$finding->last()->severity}} </td>
+                    <td> {{$finding->last()->created_at}} </td>
+                    <td> {{$finding->last()->user->first_name}} {{$finding->last()->user->last_name}} </td>
+                    <td> {{$finding->last()->updated_at}} </td>
+                    <td> 
+                    <i class="add circle icon orange large link more" data-finding="{{$finding->last()->id}}"></i>
+                    @if($finding->last()->valid == 0 && $finding->last()->accessibility == 0) 
+                    <i class="checkmark box green large icon link validate" data-finding="{{$finding->last()->id}}"></i>
+                    <i class="remove red large icon link remove" data-finding="{{$finding->last()->id}}"></i>
+                    @endif
+                    </td>
+                </tr>
         @endforeach
         </tbody>
       </table>

@@ -9,9 +9,8 @@ $('#SubmitChanges').click(function(event) {
 	});
 
 	if(isValid === false)
-		$('#message').show();
+		alert("Please fill in all inputs!");
 	else {
-		$('#message').hide();
 
 		$('#Saving').show();
 	    setTimeout(function() {
@@ -19,23 +18,24 @@ $('#SubmitChanges').click(function(event) {
 	    }, 300); // <-- time in milliseconds
 	    
 	    $data = $('#formedit').serialize();
-	    $.ajax({
-	      url: '/saveuserEditRequest',
-	      type: 'POST',
-	      data: $('#form').serialize(),
-	      success: function (data) {
-	      	console.log(data);
-	      }
-	    }).done(function() {
-			console.log("success");
-		})
-		.fail(function() {
-			console.log("error");
-		})
-		.always(function() {
-			console.log("complete");
-		});
-
+	    if (confirm('Are you sure you want to save these modifications? ')) {
+		    $.ajax({
+		      url: '/saveuserEditRequest',
+		      type: 'POST',
+		      data: $('#form').serialize(),
+		      success: function (data) {
+		      	alert('Your modifcation has been saved.');
+		      }
+		    }).done(function() {
+				console.log("success");
+			})
+			.fail(function() {
+				console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
+			});
+		}
 		
 	}
 

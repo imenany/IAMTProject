@@ -17,6 +17,8 @@ class CreateRobsTable extends Migration
             $table->increments('id');
             $table->integer('documentAI_id');
             $table->integer('finding_id');
+            $table->integer('baseline_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

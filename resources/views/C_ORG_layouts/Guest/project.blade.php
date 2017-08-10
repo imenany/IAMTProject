@@ -33,7 +33,7 @@
         @include('C_ORG_layouts.guest._docmanager_layout')
         @include('C_ORG_layouts.guest._isa_layout')
         @include('_modals_layout')
-
+        <div id="pagemessage" hidden>@if(\Session::has('message')) {{session('message')}} @endif</div>
 
 </body>
 

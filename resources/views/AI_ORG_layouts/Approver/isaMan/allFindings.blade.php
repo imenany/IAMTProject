@@ -18,6 +18,7 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
+            @if($finding->last()->valid == 1)
             <tr>
                 <td> {{$finding->last()->finding}} </td>
                 <td> {{$finding->last()->cycle}} </td>
@@ -31,6 +32,7 @@
                 <td> {{$finding->last()->updated_at}} </td>
                 <td> <i class="add circle icon orange large link more" data-finding="{{$finding->last()->id}}"></i></td>
             </tr>
+            @endif
         @endforeach
         </tbody>
       </table>

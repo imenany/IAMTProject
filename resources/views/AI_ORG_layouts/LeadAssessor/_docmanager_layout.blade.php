@@ -19,7 +19,7 @@
     <div class="ui" id="doc_man">
         <div class="ui secondary vertical pointing menu" id="doc_man_menu">
 
-          <a class="item" id="showuploadFile">
+          <a class="item" id="showuploadFile2">
           @lang('strings.uploadDocument')
           </a>
 

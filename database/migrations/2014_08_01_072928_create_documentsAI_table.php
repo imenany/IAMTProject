@@ -13,7 +13,7 @@ class CreateDocumentsAITable extends Migration
      */
     public function up()
     {
-        Schema::create('documentsAI', function (Blueprint $table) {
+        Schema::create('document_ais', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('title');
@@ -25,6 +25,7 @@ class CreateDocumentsAITable extends Migration
             $table->boolean('accessibility')->default(false);
             $table->integer('leadassessor')->default(0);
             $table->integer('assessor')->default(0);
+            $table->integer('projectmanager')->default(0);
             $table->integer('qa')->default(0);
             $table->integer('approver')->default(0);
             $table->timestamps();
@@ -38,6 +39,6 @@ class CreateDocumentsAITable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('documentsAI');
+        Schema::dropIfExists('document_ais');
     }
 }

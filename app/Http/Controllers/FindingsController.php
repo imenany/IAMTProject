@@ -8,9 +8,11 @@ use Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\UploadedFile;
 use App\Document;   
+use App\Documentai;   
 use App\Baseline;
 use App\Pparticipant;
 use App\Project;
+use App\ROBS;
 use Session;
 use App;
 use Auth;
@@ -25,37 +27,19 @@ use File;
 
 class FindingsController extends Controller
 {
-
-      public function getRoleAndSet($view,$name,$data){
-        $role = Pparticipant::with('project')->where('user_id',Auth::user()->id)->where('project_id',session('currentProject'))->first()->role->role;
-        if($role == "Manager")
-            $layout = "C_ORG_layouts.manager";
-        else if($role == "Project Participant")
-            $layout = "C_ORG_layouts.pparticipant";
-        else if($role == "Guest")
-            $layout = "C_ORG_layouts.guest";
-        else if($role == "Lead Assessor")
-            $layout = "AI_ORG_layouts.LeadAssessor";
-        else if($role == "Assessor")
-            $layout = "AI_ORG_layouts.Assessor";
-        else if($role == "Project Manager")
-            $layout = "AI_ORG_layouts.ProjectManager";
-        else if($role == "Approver")
-            $layout = "AI_ORG_layouts.Approver";
-        else if($role == "QA")
-            $layout = "AI_ORG_layouts.QA";
-
-        if(is_array($data))
-            return view($layout.'.'.$view)->with($data)->render();
-        else
-            return view($layout.'.'.$view)->with($name,$data)->render();
-    }
-
 	public function getAllFindingsView()
 	{
-        $findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
+        $user = Auth::user();
+
+        if($user->isqa || $user->isapprover || $user->isprojectmanager)
+            $findings = Finding::where('project_id',session('currentProject'))->where('valid',1)->orderBy('created_at','asc')->get();
+        else if($user->isclient)
+            $findings = Finding::where('project_id',session('currentProject'))->where('accessibility',1)->orderBy('created_at','asc')->get();
+        else 
+            $findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
+
         $findings = $findings->groupby('finding');
-		return $this->getRoleAndSet('isaMan.allFindings','findings',$findings);
+		return getRoleAndSet('isaMan.allFindings','findings',$findings);
 	}
 
 	public function getAddFindingView()
@@ -68,14 +52,14 @@ class FindingsController extends Controller
             'users' => $users
         );
 
-		return $this->getRoleAndSet('isaMan.addFindings','data', $data);
+		return getRoleAndSet('isaMan.addFindings','data', $data);
 	}
 
     public function getModifiyFindingView()
     {
         $findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
         $findings = $findings->groupby('finding');
-        return $this->getRoleAndSet('isaMan.modifyAFinding','findings',$findings);
+        return getRoleAndSet('isaMan.modifyAFinding','findings',$findings);
     }	
 
     public function getDisplayFindingView(Request $req)
@@ -86,14 +70,14 @@ class FindingsController extends Controller
         $name = Finding::where('project_id',session('currentProject'))->where('id',$data['id'])->get()->first()->finding;
         $findings = Finding::where('project_id',session('currentProject'))->where('finding',$name)->get();
 
-		return $this->getRoleAndSet('isaMan.displayFinding','findings',$findings);
+		return getRoleAndSet('isaMan.displayFinding','findings',$findings);
 	}
 
 	public function getModifiedFindingsView()
 	{
 		$findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
         $findings = $findings->groupby('finding');
-        return $this->getRoleAndSet('isaMan.modifiedFindings','findings',$findings);
+        return getRoleAndSet('isaMan.modifiedFindings','findings',$findings);
 	}
 
     public function addNewFinding(Request $req)
@@ -103,15 +87,12 @@ class FindingsController extends Controller
 
         $last_cycle = Finding::where('project_id',session('currentProject'))->where('finding',$data['finding']['finding'])->get()->last();
 
-
         if($last_cycle)
         {        
             $i = substr($last_cycle->cycle,0,1);
             $cycle = ($i+1)."O";
         }
         else $cycle = '1O';
-
-        
 
         $finding = new Finding;
         $finding->finding = $data['finding']['finding'];
@@ -125,7 +106,8 @@ class FindingsController extends Controller
         $finding->severity = $data['finding']['severity'];
         $finding->responsable = $data['finding']['responsable'];
         $finding->user_id = Auth::user()->id;
-        $finding->valid = 1;
+        $finding->valid = 0;
+        $finding->accessibility = 0;
 
         $finding->save();
 
@@ -159,6 +141,7 @@ class FindingsController extends Controller
         $finding = $prevfinding->replicate();
         $finding->response = $data['finding']['response'];
         $finding->cycle = substr($prevfinding->cycle,0,1)."R";
+        $finding->accessibility = 0;
         $finding->save();
     }
 
@@ -175,6 +158,9 @@ class FindingsController extends Controller
         $finding->response = '';
         $cycle = substr($prevfinding->cycle,0,1) +1;
         $finding->cycle = $cycle."O";
+        $finding->valid = 0;
+        $finding->accessibility = 0;
+        $finding->user_id = Auth::user()->id;
         $finding->save();
     }
 
@@ -184,8 +170,7 @@ class FindingsController extends Controller
         $data = $request->all();
         $id = $data['theid'];
 
-        $prevfinding = Finding::where('id',$id)->get()->last();
-        $finding = $prevfinding->replicate();
+        $finding = Finding::where('id',$id)->get()->last();
         $finding->description = $data['finding']['newdescription'];
         $finding->recommendation = $data['finding']['newrecommendation'];
         $finding->finding = $data['finding']['newfinding'];
@@ -193,103 +178,32 @@ class FindingsController extends Controller
         $finding->severity = $data['finding']['newseverity'];
         $finding->responsable = $data['finding']['newresponsable'];
         $finding->response= '';
-        $cycle = substr($prevfinding->cycle,0,1) +1;
-        $finding->cycle = $cycle."O";
+        /*$cycle = substr($prevfinding->cycle,0,1) +1;
+        $finding->cycle = $cycle."O";*/
+        $finding->valid = 0;
+        $finding->accessibility = 0;
         $finding->save();
 
-
     }
 
-    public function getGenerateROBSView(){
-        $findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
-        $findings = $findings->groupby('finding');
-        return $this->getRoleAndSet('isaMan.generateROBS','findings',$findings);
-    }
-
-
-    public function generateROBSPDF(Request $req)
+    public function validateFinding(Request $req)
     {
         $request = (Object) $req;
         $data = $request->all();
+        $id = $data['id'];
 
-        $array = array();
-
-        foreach ($data['finding'] as $key => $value)
-            array_push($array, $key);
-
-        $name = Finding::where('project_id',session('currentProject'))->whereIn('id',$array)->get(['finding']);
-        $data = Finding::where('project_id',session('currentProject'))->whereIn('finding',$name)->get(['finding','cycle','description','document_id','recommendation','status','severity','created_at','user_id','responsable','updated_at'])->groupby('finding');
-        
-        $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
-        $filename = 'ROBS';
-        /*$file = Excel::create('ROBS', function($excel) use($data) {
-            $excel->sheet('Finding', function($sheet) use($data){
-                
-                 $sheet->loadView('xls.ROBS', array('findings' => $data));
-                $sheet->setAutoSize(true);
-            });
-        })->store('xls', $storagePath.'/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/');
-        */
-
-        $pdf = PDF::loadView('pdf.ROBS',['findings' => $data])->setPaper('a4', 'landscape');
-        $pdf->setOptions(['isPhpEnabled' => true]);
-        $file = $pdf->output();
-        $pdf->save($storagePath.'/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/ROBS.pdf');
-
-
-        $entry = Document::where('title','ROBS.pdf')->where('baseline_id',session('currentBaseline'))->get()->first();
-        
-        if(!$entry)
-        {
-           $entry = new Document;
-            $entry->title = $filename;
-            $entry->baseline_id = session('currentBaseline');
-            $entry->url = '/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/ROBS.pdf';
-            $entry->valid = 1;
-            $entry->user_id = Auth::user()->id;
-            $entry->save();
-        }
-
-        return $entry->url;
+        $finding = Finding::where('id',$id)->get()->first();
+        $finding->valid = 1;
+        $finding->save();
     }
 
-
-    public function generateROBSXLS(Request $req)
+    public function rejectFinding(Request $req)
     {
         $request = (Object) $req;
         $data = $request->all();
+        $id = $data['id'];
 
-        $array = array();
-
-        foreach ($data['finding'] as $key => $value)
-            array_push($array, $key);
-
-        $name = Finding::where('project_id',session('currentProject'))->whereIn('id',$array)->get(['finding']);
-        $data = Finding::where('project_id',session('currentProject'))->whereIn('finding',$name)->get(['finding','cycle','description','document_id','recommendation','status','severity','created_at','user_id','responsable','updated_at'])->groupby('finding');
-        
-        $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
-        $filename = 'ROBS.xls';
-        $file = Excel::create('ROBS', function($excel) use($data) {
-            $excel->sheet('Finding', function($sheet) use($data){
-                
-                 $sheet->loadView('xls.ROBS', array('findings' => $data));
-                $sheet->setAutoSize(true);
-            });
-        })->store('xls', $storagePath.'/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/');
-        
-        $entry = Document::where('title','ROBS.xls')->where('baseline_id',session('currentBaseline'))->get()->first();
-        
-        if(!$entry)
-        {
-           $entry = new Document;
-            $entry->title = $filename;
-            $entry->baseline_id = session('currentBaseline');
-            $entry->url = '/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/ROBS.xls';
-            $entry->valid = 1;
-            $entry->user_id = Auth::user()->id;
-            $entry->save();
-        }
-        return $entry->url;
+        $finding = Finding::where('id',$id)->get()->first();
+        $finding->delete();
     }
-
 }

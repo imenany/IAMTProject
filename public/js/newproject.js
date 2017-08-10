@@ -73,16 +73,20 @@ $('.ui.radio.checkbox')
 
 $('#Next1').click(function() {
   var isValid;
-  $("input[name^='Proj']").each(function() {
+  $("input[name^='Project']").each(function() {
      var element = $(this);
      if (element.val() == "") {
          isValid = false;
      }
   });
+    if($("textarea[name^=Project").val() == "")
+    {
+      isValid = false;
+    }
+    
   if(isValid === false)
-    $('#message').show();
+    alert('Please fill in all inputs!');
   else {
-    $('#message').hide();
     $('#firsttabtitle').removeClass('active');
     $('#firsttabtitle').addClass('hidden');
     $('#secondtabtitle').addClass('active');
@@ -201,6 +205,7 @@ $(document).on('change paste keyup', '#organisation_name', function(event) {
 
 
 $('#submitform').click(function(event) {
+
   $countLA = 0;
   $countPM = 0;
   $countApprover = 0;
@@ -214,11 +219,17 @@ $('#submitform').click(function(event) {
          $countApprover += 1;
      }
   });
-
-  if($countLA < 1)
+  if ($('#organisation_name').val() == "") {
+      alert('Please select an organisation for this project.');
+  }
+  else if($countLA < 1)
     alert("You must select a Lead Assessor");
   else if($countLA == 1)
-    $("#theForm").submit();
+  {
+    if (confirm('Are you sure you want to create this project? ')) {
+      $("#theForm").submit();
+    }
+  }  
   else if($countPM > 1 || $countApprover > 1 || countLA > 1 )
     alert("You must select one and only one Lead Assessor / Project Manager / Approver");
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRobsTable extends Migration
+class CreateEvaluationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateRobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ROBSTable', function (Blueprint $table) {
+        Schema::create('evaluations', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('documentAI_id');
-            $table->integer('finding_id');
+            $table->text('state');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateRobsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ROBSTable');
+        Schema::dropIfExists('evaluations');
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Document</title>
-    <link rel="stylesheet" href="{{ ltrim(elixir('css/ROBS.css'), '/') }}" />
+    <link rel="stylesheet" href="{{ ltrim(elixir('css/ROBS_pdf.css'), '/') }}" />
 </head>
 <body>
 

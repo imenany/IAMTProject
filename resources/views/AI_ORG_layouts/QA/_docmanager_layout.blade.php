@@ -19,19 +19,10 @@
     <div class="ui" id="doc_man">
         <div class="ui secondary vertical pointing menu" id="doc_man_menu">
 
-          <a class="item" id="showuploadFile">
-          @lang('strings.uploadDocument')
-          </a>
-
-          <a class="item" id="showviewDocuments">
-          @lang('strings.readDocument')
-          </a>
-          <a class="item" id="showallBaselines">
-                @lang('strings.displayBaselines')
-          </a>
-            <a class="item" id="showallDocuments">
-                @lang('strings.displayDocuments') 
-            </a>
+          <a class="item" id="showviewDocuments">@lang('strings.readDocument')</a>
+          <a class="item" id="showallBaselines">@lang('strings.displayBaselines')</a>
+          <a class="item" id="showallDocuments">@lang('strings.displayDocuments') </a>
+          
         </div>
         <div id="doc_man_content">
             

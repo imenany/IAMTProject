@@ -32,7 +32,8 @@
         @include('_modals_layout')
         @include('_chat_layout')
 
-        <div id="redirect">@if(isset($redirect)) {{$redirect}} @endif</div>
+        <div id="redirect" hidden>@if(isset($redirect)) {{$redirect}} @endif</div>
+        <div id="pagemessage" hidden>@if(\Session::has('message')) {{session('message')}} @endif</div>
 
 </body>
 

@@ -19,6 +19,8 @@
             <div class="menu">
               <a class="item" id="showAllFindings">@lang('strings.displayFindings')</a>
               <a class="item" id="showAddFinding">@lang('strings.addFinding')</a>
+              <a class="item" id="showAddMissingDocument">@lang('strings.addMissingDoc')</a>
+              <a class="item" id="showMissingDocument">@lang('strings.missingDoc')</a>
               <a class="item" id="showModifyFinding">@lang('strings.modifyFinding')</a>
               <a class="item" id="showModifiedFindings">@lang('strings.modifiedFindings')</a>
             </div>

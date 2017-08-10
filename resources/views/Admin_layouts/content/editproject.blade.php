@@ -214,7 +214,7 @@
 						        <td class="iceBG"><b>{{$participant->user->last_name}}</b></td>
 						        <td>{{$participant->user->fonction}}</td>
 						        <td>{{$participant->user->organisation}}</td>
-						        @if($participant->user->fonction == "AI_ORG")
+						        @if($participant->user->organisation == "Viattech Q&S")
 							  	<td class="center aligned">
 							        <div class="ui radio checkbox">
 							        <input name="role[{{$participant->user->id}}]" {!! (strcmp($participant->role->role,'Lead Assessor')) == 0 ? 'checked': 'null' !!} tabindex="0" class="hidden" type="radio" value="Lead Assessor"/>	

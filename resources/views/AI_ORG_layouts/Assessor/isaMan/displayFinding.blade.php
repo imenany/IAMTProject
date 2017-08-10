@@ -1,6 +1,6 @@
 <div class="ui grid" >
   <div class="wide column">
-      <table class="ui celled small table datatable" id="findingstable">
+      <table class="ui celled table datatable" id="findingstable">
         <thead>
           <tr>
             <th>@lang('strings.finding')</th>
@@ -18,7 +18,11 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
-            <tr class="{!! ( strpos($finding->cycle, 'R') !== false) ? 'lightYellow' : '' !!}">
+            @if($finding->valid == 0)
+                <tr class="active">
+            @else
+                <tr class="{!! ( strpos($finding->cycle, 'R') !== false) ? 'lightYellow' : '' !!}">
+            @endif
                 <td> {{$finding->finding}} </td>
                 <td> {{$finding->cycle}} </td>
                 <td> 
@@ -38,8 +42,10 @@
                 <td>
                     @if($finding->id == $findings->last()->id && strpos($finding->cycle, 'R') !== false)
                         <i class="reply icon orange large link responseA" data-finding="{{$finding->id}}"></i>
-                    @elseif($finding->id == $findings->last()->id && strpos($finding->cycle, 'O') !== false)
+                    @elseif($finding->id == $findings->last()->id && strpos($finding->cycle, 'O') !== false && $finding->accessibility == 1)
                         @lang('strings.waitingResponseClient')
+                    @elseif($finding->id == $findings->last()->id && strpos($finding->cycle, 'O') !== false && $finding->accessibility == 0)
+                        
                     @endif
                 </td>
             </tr>

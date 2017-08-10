@@ -27,4 +27,9 @@ class Document extends Model
     {
         return $this->belongsTo('App\Normesphase','phase');
     }
+
+    public function evaluation()
+    {
+        return $this->belongsTo('App\Evaluation');
+    }
 }
