@@ -1,0 +1,15 @@
+[X] Email notification project created
+[X] Notifcation for the current user (corrected)
+[X] Un seul approver par projet
+[ ] Enregistrer les préference de l'utilisateur
+[X] Afficher la liste des documents du derniere baseline
+[ ] Afficher une alarme lorsque la baseline est fermée
+[X] Finding -> reference (corrected)
+[X] Le manager peut répondre à tout les findings
+[X] QA -> validate
+[X] Figer le champ document dans finding
+[ ] Notification par email -> document manquant
+[X] Résponsable : Lead assessor
+[ ] Etendre la liste des documents -> documents IA_ORG
+[ ] Créer un document virtuel par l'ISA
+[ ] Export all documents as a zip file
