@@ -6,6 +6,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Mail;
 use App\Pparticipant;
+use Auth;
+use App\Notifications\NewUserCreated;
+use App\Notifications\ProjectCreated;
+use Response;
 
 class User extends Authenticatable
 {
@@ -42,22 +46,16 @@ class User extends Authenticatable
     }
 
 
-    public static function generatePassword()
+    public static function sendProjectCreatedEmail($role,$user)
     {
-      // Generate random string and encrypt it. 
-      return bcrypt(str_random(35));
+      $user->notify(new ProjectCreated($role->role));
     }
 
     public static function sendWelcomeEmail($user)
     {
       // Generate a new reset password token
       $token = app('auth.password.broker')->createToken($user);
-      
-      // Send email
-      Mail::send('Admin_layouts.content.email', ['user' => $user, 'token' => $token], function ($m) use ($user) {
-        $m->from('hello@appsite.com', 'Your App Name');
-        $m->to($user->email, $user->first_name)->subject('Welcome to APP');
-      });
+      $user->notify(new NewUserCreated($token));
     }
 
     public function getRoleAttribute()
@@ -124,4 +122,9 @@ class User extends Authenticatable
           return true;
         else return false;
     }
+
+    public function getFullnameAttribute(){
+        return $this->first_name . " " . $this->last_name;
+    }
+
 }

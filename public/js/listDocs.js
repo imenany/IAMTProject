@@ -114,3 +114,13 @@ $("#ListOfDocuments").on('click', '.edit', function(event) {
 		console.log("complete");
 	});
 });
+
+
+
+  $('#ListOfDocuments').DataTable({
+        "pageLength": 5,
+        "lengthMenu": [ 5, 10, 15 ],
+        "bDestroy": true,
+        "autoWidth": false
+
+  });

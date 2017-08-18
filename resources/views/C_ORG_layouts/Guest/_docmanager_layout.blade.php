@@ -3,14 +3,8 @@
       <div class="header item" id="doc_man_title">
             @lang('strings.docManTitle')
       </div>
-      <a class="item">
-            <div class="ui icon input">
-                  <input placeholder="Search..." type="text">
-                  <i class="search icon"></i>
-            </div>
-        </a>
         <div class="header item">
-          <h3 class="ui header" id="doc_title"></h3>
+          <h3 id="doc_title"></h3>
       </div>
         <div class="item right">
             <i class="sort descending icon link" id="show_man"></i>

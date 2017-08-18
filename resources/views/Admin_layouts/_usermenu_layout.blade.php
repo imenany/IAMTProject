@@ -1,7 +1,7 @@
 <div class="ui menu inverted" id="fixed_top">
-    <div class="item">@lang('strings.welcomeBack') <b> {{Auth::user()->first_name}}</b>!</div>
+    <div class="item"> <b>@lang('strings.welcomeBack') {{Auth::user()->first_name}}</b>!</div>
     @if(Session::has('role'))
-        <div class="item selectedProj">@lang('strings.loggedAs') <b>: {{Session::get('role')}}</b></div>
+        <div class="item selectedProj"><b>@lang('strings.loggedAs') : {{Session::get('role')}}</b></div>
     @endif
 
     @if(Session::has('currentProject'))
@@ -26,7 +26,6 @@
            <input type="text" class="hidden" name="projID" value="{{ Session::get('currentProject') }}"/>
     @endif
 
-    <div class="item"><i class="setting icon link" id="settings"></i></div>
-    <a class="item" href="{{ url('/logout') }}"><i class="sign out icon"></i> @lang('strings.signOut') </a>
+    <a class="item" href="{{ url('/logout') }}"><i class="sign out icon"></i></a>
     </div>
 </div>  

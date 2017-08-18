@@ -20,17 +20,13 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
 </head>
 <body>
-
-
         @include('C_ORG_layouts._leftmenu_layout')
         @include('C_ORG_layouts._usermenu_layout')
-        {{--@include('Admin_layouts._modals_layout')--}}
-        @yield('manager')
-    
 
+        <div id="redirect" hidden>@if(\Session::has('redirect')) {{session('redirect')}} @endif</div>
+        <div id="pagemessage" hidden>@if(\Session::has('message')) {{session('message')}} @endif</div>
 </body>
 
 <!-- Scripts -->
@@ -41,8 +37,9 @@
     <script src="{{ URL::asset('/js/dataTables.semanticui.min.js') }}"></script>
     <script src="{{ URL::asset('/semantic/semantic.min.js') }}"></script>
     <script src="{{ URL::asset('/js/custom.js') }}"></script>
+    <script src="{{ URL::asset('/js/mainlayout.js') }}"></script>
+    <script src="{{ URL::asset('/js/viewsControl.js') }}"></script>
     <script src="{{ URL::asset('/js/left_bar_data.js') }}"></script>
-    
     @yield('scripts')
     
 </html>

@@ -28,9 +28,7 @@
 				    <th>@lang('strings.organisation')</th>
 				    <th>@lang('strings.startDate')</th>
 				    <th>@lang('strings.endDate')</th>
-				    <th>@lang('strings.projSTD')</th>
 				    <th>@lang('strings.progress')</th>
-				    <th>@lang('strings.corgbaseline')</th>
 				    <th>@lang('strings.createdat')</th>
 				    <th>@lang('strings.updatedat')</th>
 				    <th>@lang('strings.action')</th>
@@ -44,9 +42,7 @@
 						<td>{{$project->organisation}}</td>
 						<td>{{$project->dateDebut}}</td>
 						<td>{{$project->dateFin}}</td>
-						<td>{{$project->STD}}</td>
 						<td>{{$project->progress}}</td>
-						<td>{{$project->c_orgBaseline}}</td>
 						<td>{{$project->created_at}}</td>
 						<td>{{$project->updated_at}}</td>
 						<td class="selectable">

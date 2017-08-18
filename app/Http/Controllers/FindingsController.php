@@ -143,6 +143,8 @@ class FindingsController extends Controller
         $finding->cycle = substr($prevfinding->cycle,0,1)."R";
         $finding->accessibility = 0;
         $finding->save();
+
+        createNotification(Auth::user()->id,'ia','New response on finding '.$finding->finding.' has been added by '.Auth::user()->fullname.'.','Findings');
     }
 
     public function saveFindingResponseA(Request $req)
@@ -184,6 +186,8 @@ class FindingsController extends Controller
         $finding->accessibility = 0;
         $finding->save();
 
+        $LA = Project::where('id',session('currentProject'))->get()->first()->leadassessor;
+        createNotification(Auth::user()->id,$LA->id,'Finding '.$finding->finding.' has been modified by '.Auth::user()->fullname.'.','Findings');
     }
 
     public function validateFinding(Request $req)
@@ -194,6 +198,10 @@ class FindingsController extends Controller
 
         $finding = Finding::where('id',$id)->get()->first();
         $finding->valid = 1;
+
+        createNotification(Auth::user()->id,$finding->user_id,'Your finding ('.$finding->finding.') has been validated by '.Auth::user()->fullname.'.','Findings');
+        createNotification(Auth::user()->id,'ia','New finding added ('.$finding->finding.') by '.Auth::user()->fullname.'.','Findings');
+
         $finding->save();
     }
 
@@ -204,6 +212,9 @@ class FindingsController extends Controller
         $id = $data['id'];
 
         $finding = Finding::where('id',$id)->get()->first();
+
+        createNotification(Auth::user()->id,$finding->user_id,'Your finding ('.$finding->finding.') has been rejected by '.Auth::user()->fullname.'.','Findings');
+
         $finding->delete();
     }
 }

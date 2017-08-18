@@ -1,14 +1,3 @@
-<div class="ui modal" id="settings_modal">
-  <div class="header">Settings</div>
-  <div class="content">
-    Change language - Change profil settings - ....
-  </div>
-  <div class="actions">
-    <div class="ui approve button">Apply Changes</div>
-    <div class="ui cancel button">Cancel</div>
-  </div>
-</div>
-
 <div class="ui modal" id="new_baseline_modal">
 	  <div class="header">Alert - new Baseline</div>
 	  <div class="content">
@@ -165,14 +154,14 @@
 			  <tbody>
 			  	<tr>
 	              <td class="two wide column">@lang('strings.finding')</td>
-	              <td><input name="finding[findingA]" ></td>
+	              <td><input name="finding[findingA]" disabled="" ></td>
 	            </tr>
 	            <tr>
 	              <td class="two wide column">@lang('strings.relatedDoc')</td>
 	              <td>
 	                 <div class="ui form">
 	                  <div class="field">
-	                      <select name="finding[documentA]">
+	                      <select name="finding[documentA]" disabled="">
 	                        
 	                          {{--<option value="{{$document->id}}">{{$document->title}} </option>--}}
 	                        
@@ -183,7 +172,7 @@
 	            </tr>
 	            <tr>
 	              <td class="two wide column">@lang('strings.description')</td>
-	              <td><textarea name="finding[descriptionA]"></textarea></td>
+	              <td><textarea name="finding[descriptionA]" ></textarea></td>
 	            </tr>
 	            <tr>
 	              <td class="two wide column">@lang('strings.recommendation')</td>
@@ -355,3 +344,4 @@
 		</form>
 	</div>
 </div>
+

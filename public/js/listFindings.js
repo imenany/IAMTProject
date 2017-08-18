@@ -273,7 +273,7 @@
         }, 20);
         $url = data.replace("public/","");
         $('#download').attr({
-          href: "/storage/"+$url,
+          href: "/storage"+$url,
         });
       }
     })
@@ -294,7 +294,7 @@
         }, 20);
         $url = data.replace("public/","");
         $('#download').attr({
-          href: "/storage/"+$url,
+          href: "/storage"+$url,
         });
       }
     })
@@ -311,7 +311,8 @@
         "pageLength": 5,
         "lengthMenu": [ 5, 10, 15 ],
         "bDestroy": true,
-        "order": [[ 7, "desc" ]]
+        "order": [[ 0, "desc" ]],
+        "autoWidth": false
   });
 
 

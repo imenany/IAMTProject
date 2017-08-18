@@ -1,80 +1,90 @@
     $('#showNewBaseline').click(function(event) {
         $.post('/newBaseline', function(data, textStatus, xhr) {
+            $("#doc_title").html("New Baseline");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showopencloseBaseline').click(function(event) {
         $.post('/opencloseBaseline', function(data, textStatus, xhr) {
+            $("#doc_title").html("Open/Close a baseline");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showuploadFile').click(function(event) {
         $.post('/uploadFile', function(data, textStatus, xhr) {
+            $("#doc_title").html("Upload files");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showuploadFile2').click(function(event) {
         $.post('/uploadDocument', function(data, textStatus, xhr) {
+            $("#doc_title").html("Upload files");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showlockBaseline').click(function(event) {
         $.post('/lockBaseline', function(data, textStatus, xhr) {
+            $("#doc_title").html("Lock/Unlock a baseline");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showuploadFile2').click(function(event) {
         $.post('/uploadFile', function(data, textStatus, xhr) {
+            $("#doc_title").html("Upload files");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showviewDocuments').click(function(event) {
         $.post('/viewDocuments', function(data, textStatus, xhr) {
+            $("#doc_title").html("Read a document");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showmodifyDocuments').click(function(event) {
         $.post('/modifyDocuments', function(data, textStatus, xhr) {
+            $("#doc_title").html("Modify a document");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showallDocuments').click(function(event) {
         $.post('/allDocuments', function(data, textStatus, xhr) {
+            $("#doc_title").html("List of documents");
             $("#doc_man_content").html(data);
         });
     });
     
     $('#showallDocuments2').click(function(event) {
         $.post('/allDocuments', function(data, textStatus, xhr) {
+            $("#doc_title").html("List of documents");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showmodifyDocuments').click(function(event) {
         $.post('/allDocuments', function(data, textStatus, xhr) {
+            $("#doc_title").html("Modify a document");
             $("#doc_man_content").html(data);
         });
     });
 
     $('#showallBaselines').click(function(event) {
         $.post('/allBaselines', function(data, textStatus, xhr) {
+            $("#doc_title").html("List of baselines");
             $("#doc_man_content").html(data);
         });
     });
 
-
-
     $('#showAllFindings').click(function(event) {
         $.post('/allFindings', function(data, textStatus, xhr) {
-            $("#page_title").html("Show All Findings");
+            $("#page_title").html("List of Findings");
             $("#ISA_content").html(data);
         });
     });

@@ -7,9 +7,13 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 	min-height: 100vh;
 	border: 10px 0 0 0;
 	border-radius: 0;
-	background-color: #304269;
-	border-right: 4px solid #07ABA1;
+	background-color:  #383E4B;
 
+}
+
+.logotitle{
+	background: #1E8FC6!important;
+	height: 5vh!important;
 }
 
 #left_menu_div{
@@ -20,39 +24,36 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 	float: left;
 	min-height: 100vh;
 	border-radius: 0;
-	background-color: #304269;
-	border-right: 4px solid #07ABA1;
+	background-color: #383E4B;
 }
 
 #fixed_top{
 	border-radius: 0;
-	margin-bottom: 1px;
-	height: 4.6vh;
-	background:#304269;
+	height: 5vh;
+	background: #36A9E1!important;
 }
 
 #chat_layout{
     position: absolute;
     bottom: 0;
-	background: white;
+	background: #F5F5F5;
 	right: 60px;
 	z-index: 5;
-	border: 2px solid #91BED4;
-	border-bottom: 0;
-	border-top: 4px solid #07ABA1;
+	border: 2px solid #F5F5F5;
+	border: 0;
+	border-top: 4px solid #36A9E1;
 	width: 25rem;
-	border-top-right-radius: 8px;
-	border-top-left-radius: 8px;
 	-webkit-box-shadow: 0px 0px 3px 0px rgba(48,66,105,1);
 	-moz-box-shadow: 0px 0px 3px 0px rgba(48,66,105,1);
 	box-shadow: 0px 0px 3px 0px rgba(48,66,105,1);
 }
 
 #chat_title{
-	background: #91BED4;
+	background: #383E4B;
 	padding: 10px;
 	font-weight: 700;
-	color: #304269;
+	color: white;
+	cursor: pointer;
 }
 
 #chat_text{
@@ -62,26 +63,86 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 }
 
 #messages{
-	padding: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	background: #D9E8F5;
-	height: 25vh;
+	height: 50vh;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
 
-.ui.comments .comment .text{
-	color: #304269!important;
-	font-size: 9pt;
+.ui.comments .comment_others {
+    padding: 0!important;
+    float: right;
+    margin: 1px;
 }
 
-.ui.comments .comment .author{
-	color: #304269!important;
+.ui.comments .comment_auth {
+    padding: 0!important;
+    float: left;
+    margin: 1px;
+}
+
+.ui.comments .comment_auth .text_auth{
+	color: white !important;
 	font-size: 10pt;
+	background: #36A9E1 !important;
+	border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;
+	display: inline-block;
+	padding: 6px;
+	margin: 0 !important;
+	max-width: 20rem;
+}
+
+.ui.comments .comment_others .text_others{
+	color: #304269 !important;
+	font-size: 10pt;
+	background: #D6DDE7 !important;
+	border-bottom-left-radius: 20px;
+	border-top-left-radius: 20px;
+	display: inline-block;
+	padding: 6px;
+	margin: 0 !important;
+	float: right;
+	max-width: 20rem;
+}
+
+.ui.comments .comment_auth .author_auth{
+	font-size: 8pt;
+	font-weight: normal!important;
+	display: inline-block;
+	margin-left: .5em;
+	color: rgba(0,0,0,.4);
+}
+
+.ui.comments .comment_others .author_others{
+	font-size: 8pt;
+	font-weight: normal!important;
+	display: inline-block;
+	margin-left: .5em;
+	color: rgba(0,0,0,.4);
+	float: right;
+}
+
+.ui.comments .comment_auth .metadata_auth{
+	display: inline-block;
+	margin-left: .5em;
+	color: rgba(0,0,0,.4);
+	font-size: .875em;
+}
+
+.ui.comments .comment_others .metadata_others{
+	display: inline-block;
+	margin-left: .5em;
+	color: rgba(0,0,0,.4);
+	font-size: .875em;
+	float: right;
 }
 
 /* Doc MAN Title + ISA TITLE */ 
 .ui.menu.top_menu{
-	background-color: #91BED4 !important;
+	background-color: #D6DDE7 !important;
 	border-radius: 0px;
 	border-bottom: 1px solid rgba(34,36,38,.15);
 	height: 6vh;
@@ -115,14 +176,18 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 }
 
 .ui.yellow.button, .ui.yellow.label{
-	background: #07ABA1!important;
+	background: #1E8FC6!important;
 }
 
 .selectedProj{
-	background: #07ABA1!important;
+	background: #2D323D!important;
 	color: white!important;
 }
 
+.selectedProjTop{
+	background: #219FDD!important;
+	color: white!important;
+}
 
 .item.head_menu_title{
 	background-color: white;
@@ -185,6 +250,9 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 	border-right-width: 1px;
 }
 
+.ui.vertical.menu > .item:first-child {
+    border-radius: 0;
+}
 
 
 #upload_input{
@@ -240,6 +308,31 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   visibility: visible;
 }
 
+#documentsNotificationsPopUp{
+	font-size: 9pt;
+	max-height: 300px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	z-index: 3;
+}
+
+#findingsNotificationsPopUp{
+	font-size: 9pt;
+	max-height: 300px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+		z-index: 3;
+
+}
+
+#reviewsNotificationsPopUp{
+	font-size: 9pt;
+	max-height: 300px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+		z-index: 3;
+
+}
 
 
 

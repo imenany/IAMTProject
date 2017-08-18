@@ -1,17 +1,18 @@
 <div class="ui menu inverted" id="fixed_top">
-    <div class="item">@lang('strings.welcomeBack') <b> {{Auth::user()->first_name}}</b>!</div>
+    <div class="hidden" id="authuserid">{{Auth::user()->id}}</div>
+    <div class="item"><b>@lang('strings.welcomeBack')  {{Auth::user()->first_name}}!</b></div>
     @if(Session::has('role'))
-        <div class="item selectedProj">@lang('strings.loggedAs') <b>: {{Session::get('role')}}</b></div>
+        <div class="item selectedProjTop">Role <b>: {{Session::get('role')}}</b></div>
     @endif
 
-    @if(Session::has('currentProject'))
+    {{--@if(Session::has('currentProject'))
     <div class="right menu" >
-        <div class="item selectedProj"><b><h2>{{Session::get('currentProjectName')}}</h2></b></div>
+        <div class="item selectedProjTop"><b>{{Session::get('currentProjectName')}}</b></div>
     </div>
-    @endif
+    @endif--}}
 
     <div class="right menu" >
-    <div class="item ui dropdown">  <i class="world icon"></i> {{ Config::get('languages')[App::getLocale()] }}
+    <div class="item ui dropdown">  <i class="world icon"></i> <b>{{ Config::get('languages')[App::getLocale()] }}</b>
         <i class="caret down icon link"></i>
         <div class="ui menu">
         @foreach (Config::get('languages') as $lang => $language)
@@ -26,7 +27,7 @@
            <input type="text" class="hidden" name="projID" value="{{ Session::get('currentProject') }}"/>
     @endif
 
-    <div class="item"><i class="setting icon link" id="settings"></i></div>
-    <a class="item" href="{{ url('/logout') }}"><i class="sign out icon"></i> @lang('strings.signOut') </a>
+    <a class="item" href="{{ url('/logout') }}"><i class="sign out icon"></i></a>
+
     </div>
 </div>

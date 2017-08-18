@@ -8,8 +8,8 @@
 
 <div class="ui left top vertical menu inverted" id="left_menu" style="left: 0px; top: 0px; width: 250px !important; margin-top: 0px;">
     
-    <div class="item">
-      <a href="/"><b>IAMT</b></a>
+    <div class="item logotitle">
+      <a href="/"><img src="{{ URL::asset('/img/viattech.png') }}" height="25px" /></a>
       <a class="ui logo icon image">
             <i class="large align justify icon link" id="hide_menu"></i>
         </a>

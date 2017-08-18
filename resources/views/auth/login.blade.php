@@ -7,8 +7,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
-<link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ URL::asset('css/jquery-ui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('semantic/semantic.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/style.css') }}">
+    
 
 <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -49,6 +52,7 @@
     <form class="ui large form" method="POST" action="{{ route('login') }}">
         {{ csrf_field() }}
       <div class="ui stacked segment">
+
         <div class="field">
             <img src="img/viattechlogo.png" class="image">
             <div class="ui left icon input">
@@ -81,7 +85,7 @@
     </form>
 
     <div class="ui message">
-      New to us? <a href="{{ route('register') }}">Sign Up</a>
+      {{--New to us? <a href="{{ route('register') }}">Sign Up</a>--}}
       <a class="btn btn-link" href="{{ route('password.request') }}">
           Forgot Your Password?
       </a>

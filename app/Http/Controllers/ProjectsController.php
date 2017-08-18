@@ -13,6 +13,7 @@ use App\Role;
 use App\Normesphase;
 use App\NormesAssignement;
 use App\Message;
+use App\Notification;
 
 
 class ProjectsController extends Controller
@@ -57,7 +58,12 @@ class ProjectsController extends Controller
                 $pp->project_id = $projectID->id;
                 $pp->user_id = $user;
                 $pp->role_id = Role::where('role',$value)->first()->id;  
-                $pp->save(); 
+                $pp->save();
+
+                $user = User::where('id',$user)->get()->first();
+                $role = Role::where('id',$pp->role_id)->get()->first();
+                User::sendProjectCreatedEmail($role,$user);
+
             }
         return redirect('/listProjects');
 
@@ -257,11 +263,34 @@ class ProjectsController extends Controller
     public function geDocumentsAccessibilityView(){
 
         $documents = Project::where('id',session('currentProject'))->get()->first()->baselines;
-
-
-
         $array = array('project' => $project, 'normes' => $normes, 'selectednormes' => $selectednormesids);
         return getRoleAndSet('isaMan.phasesManagement','data',$array);
     }
+
+    public function getreviewingnotifications(){
+        $notifications = Notification::where('project_id',session('currentProject'))->where('type','Reviewing')->where('responsable',Auth::user()->id)->where('seen',0)->get();
+        return $notifications;
+    }
+
+    public function getfindingsnotifications(){
+        $notifications = Notification::where('project_id',session('currentProject'))->where('type','Findings')->where('responsable',Auth::user()->id)->where('seen',0)->get();
+        return $notifications;
+    }
+
+    public function getdocumentsnotifications(){
+        $notifications = Notification::where('project_id',session('currentProject'))->where('type','Documents')->where('responsable',Auth::user()->id)->where('seen',0)->get();
+        return $notifications;
+    }
+
+    public function setNotifcationSeen(Request $req){
+        $request = (Object) $req;
+        $data = $request->all();
+        $id = $data['id'];
+
+        $notification = Notification::where('id',$id)->get()->first();
+        $notification->seen = 1;
+        $notification->save();
+    }
+
 
 }

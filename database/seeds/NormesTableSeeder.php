@@ -142,7 +142,23 @@ class NormesTableSeeder extends Seeder
         $norme = new Norme();
         $norme->name = 'EN50129';
         $norme->save();
-
+        
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50129')->first()->id;
+        $normePhase->name = 'Safety related application';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50129')->first()->id;
+        $normePhase->name = 'Safety related transmission function';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50129')->first()->id;
+        $normePhase->name = 'Safety related cryptographic technique';
+        $normePhase->save();
+        $normePhase = new NormesPhase();
+        $normePhase->norme_id = Norme::where('name','EN50129')->first()->id;
+        $normePhase->name = 'Safety related message';
+        $normePhase->save();
        
 
     }

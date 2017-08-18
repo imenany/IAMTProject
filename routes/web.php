@@ -21,9 +21,11 @@
 
         Session::forget('role');
         Session::forget('currentProject');
-		if(Auth::user()->access == 0)
-			return view('welcome');
-		else return view('Admin_layouts.adminContent');
+		if(Auth::user())
+		{	if(Auth::user()->access == 0)
+				return view('welcome');
+			else return view('Admin_layouts.adminContent');
+		} else return Redirect::to('/login');
 	});
 
 // ########################## Route Group : Users ############################ //
@@ -38,8 +40,6 @@ Route::group(['middleware' => 'otherUsers'], function() {
 		Route::post('/savefindingRequest','FindingsController@addNewFinding');
 
 		Route::post('/modifiedFindings','FindingsController@getModifiedFindingsView');
-
-
 
 	});
 
@@ -75,6 +75,12 @@ Route::group(['middleware' => 'otherUsers'], function() {
 
 	});
 
+	/* ********* Notifications ****************************/
+	Route::post('getreviewingnotifications', 'ProjectsController@getreviewingnotifications');
+	Route::post('getdocumentsnotifications', 'ProjectsController@getdocumentsnotifications');
+	Route::post('getfindingsnotifications', 'ProjectsController@getfindingsnotifications');
+	Route::post('setNotifcationSeen', 'ProjectsController@setNotifcationSeen');
+	
 
 	/* ********* Project Phases Management ****************/
 	Route::post('/projectPhases','ProjectsController@getProjectPhasesView');

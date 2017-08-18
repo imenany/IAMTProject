@@ -27,6 +27,7 @@ class CreateFindingsTable extends Migration
             $table->char('status',1);
             $table->enum('severity', ['MIN', 'NA', 'MAX', 'CRIT']);
             $table->integer('valid');
+            $table->integer('accessibility');
             //$table->integer('stdReq');
 
             $table->timestamps();

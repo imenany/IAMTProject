@@ -26,10 +26,10 @@
     @if(Auth::user()->access == 1)
         
         @include('C_ORG_layouts._leftmenu_layout')
-        @include('C_layouts._usermenu_layout')
-        @include('C_layouts._docmanager_layout')
-        @include('C_layouts._isa_layout')
-        @include('C_layouts._modals_layout')
+        @include('C_ORG_layouts._usermenu_layout')
+        @include('C_ORG_layouts._docmanager_layout')
+        @include('C_ORG_layouts._isa_layout')
+        @include('_modals_layout')
     
     @elseif(Auth::user()->access == 0)
 

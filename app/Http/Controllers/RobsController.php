@@ -19,6 +19,7 @@ use Session;
 use App;
 use Auth;
 use App\User;
+use App\Notification;
 use App\Norme;
 use App\NormesAssignement;
 use App\Finding;
@@ -58,6 +59,9 @@ class RobsController extends Controller
         $document = Documentai::where('id',$data['id'])->get()->first();
         $document->accessibility = 1;
         $document->save();
+        
+        createNotification(Auth::user()->id,'client','[ISA] Document '.$document->title.' has been added by '.$document->user->fullname.'.','Documents');
+
     }
 
     public function hideDoc(Request $req)
@@ -68,6 +72,9 @@ class RobsController extends Controller
         $document = Documentai::where('id',$data['id'])->get()->first();
         $document->accessibility = 0;
         $document->save();
+
+        createNotification(Auth::user()->id,'client','[ISA] Document '.$document->title.' has been hidden by '.$document->user->fullname.'.','Documents');
+
     }
 
     public function validateROBS(Request $req)
@@ -78,13 +85,24 @@ class RobsController extends Controller
         $document = Documentai::where('id',$data['id'])->get()->first();
 
         if($data['user'] == "projectmanager")
+        {
             $document->approver = 1;
-        elseif($data['user'] == "approver")
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and validated by '.Auth::user()->fullname.'.','Reviewing');
+        }elseif($data['user'] == "approver")
+        {
             $document->approver = 1;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and validated by '.Auth::user()->fullname.'.','Reviewing');
+        }
         elseif($data['user'] == "qa")
+        {
             $document->qa = 1;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and validated by '.Auth::user()->fullname.'.','Reviewing');
+        }
         elseif($data['user'] == "assessor")
+        {
             $document->assessor = 1;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and validated by '.Auth::user()->fullname.'.','Reviewing');
+        }     
         elseif($data['user'] == "leadassessor")
         {
             $document->leadassessor = 1;
@@ -97,6 +115,11 @@ class RobsController extends Controller
                 $finding->accessibility = 1;
                 $finding->save();
             }
+
+        $LA = Project::where('id',session('currentProject'))->get()->first()->leadassessor;
+
+        createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and validated by '.Auth::user()->fullname.'.','Reviewing');
+        createNotification(Auth::user()->id,'client','[ISA] New findings has been added by '.$document->user->fullname.'.','Findings');
 
         }
 
@@ -119,6 +142,7 @@ class RobsController extends Controller
             $document->leadassessor = 0;
             $document->valid = 0;
             $document->accessibility = 0;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and rejected by '.Auth::user()->fullname.'.','Documents');
 
         }    
         elseif($data['user'] == "approver")
@@ -129,6 +153,8 @@ class RobsController extends Controller
             $document->leadassessor = 0;
             $document->valid = 0;
             $document->accessibility = 0;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and rejected by '.Auth::user()->fullname.'.','Documents');
+
         }
         elseif($data['user'] == "projectmanager")
         {
@@ -137,6 +163,7 @@ class RobsController extends Controller
             $document->leadassessor = 0;
             $document->valid = 0;
             $document->accessibility = 0;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and rejected by '.Auth::user()->fullname.'.','Documents');
         } 
         elseif($data['user'] == "assessor")
         {
@@ -144,12 +171,14 @@ class RobsController extends Controller
             $document->leadassessor = 0;
             $document->valid = 0;
             $document->accessibility = 0;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and rejected by '.Auth::user()->fullname.'.','Documents');
         } 
         elseif($data['user'] == "leadassessor")
         {
             $document->leadassessor = 0;
             $document->valid = 0;
             $document->accessibility = 0;
+            createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and rejected by '.Auth::user()->fullname.'.','Documents');
         }
 
         $ROBS = ROBS::where('documentAI_id',$document->id)->get();
@@ -159,6 +188,8 @@ class RobsController extends Controller
             $finding->accessibility = 0;
             $finding->save();
         }
+
+        
         $document->save();
 
     }
@@ -194,7 +225,10 @@ class RobsController extends Controller
         
         $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
         $filename = 'ROBS';
-        $pdf = PDF::loadView('pdf.ROBS',['findings' => $data])->setPaper('a4', 'landscape');
+        $Docs = Project::where('id',session('currentProject'))->first()->baselines;
+        $MissingDocs = Missingdoc::where('project_id',session('currentProject'))->where('valid',1)->get();
+
+        $pdf = PDF::loadView('pdf.ROBS',['findings' => $data, 'baselines' => $Docs, 'Documents' => $MissingDocs])->setPaper('a4', 'landscape');
         $pdf->setOptions(['isPhpEnabled' => true]);
         $file = $pdf->output();
         $pdf->save($storagePath.$entry->url);
@@ -208,6 +242,7 @@ class RobsController extends Controller
             $ROBS->baseline_id = session("currentBaseline");
             $ROBS->save();
         }
+
         return $entry->url;
     }
 
@@ -221,15 +256,13 @@ class RobsController extends Controller
 
         /******************** Create Document on SQL DB *************************/
 
-        
-        
-            $entry = new Documentai;
-            $entry->title = $filename.".xls";
-            $entry->baseline_id = session('currentBaseline');
-            $entry->url = '/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/'.$filename.'.xls';
-            $entry->valid = 0;
-            $entry->user_id = Auth::user()->id;
-            $entry->save();
+        $entry = new Documentai;
+        $entry->title = $filename.".xls";
+        $entry->baseline_id = session('currentBaseline');
+        $entry->url = '/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/'.$filename.'.xls';
+        $entry->valid = 0;
+        $entry->user_id = Auth::user()->id;
+        $entry->save();
 
 
         /******************** Create Document LOCAL DB *************************/
@@ -282,6 +315,8 @@ class RobsController extends Controller
             $ROBS->baseline_id = session("currentBaseline");
             $ROBS->save();
         }
+
+      
 
 
         return '/public/download/'.session('currentProject').'/'.Baseline::where('id',session('currentBaseline'))->get()->first()->version.'/'.$filename.'.xls';

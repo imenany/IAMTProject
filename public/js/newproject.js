@@ -224,14 +224,13 @@ $('#submitform').click(function(event) {
   }
   else if($countLA < 1)
     alert("You must select a Lead Assessor");
-  else if($countLA == 1)
-  {
-    if (confirm('Are you sure you want to create this project? ')) {
-      $("#theForm").submit();
-    }
-  }  
   else if($countPM > 1 || $countApprover > 1 || countLA > 1 )
     alert("You must select one and only one Lead Assessor / Project Manager / Approver");
+  else {
+        if (confirm('Are you sure you want to create this project? ')) {
+          $("#theForm").submit();
+        }
+  }
 
 });
 

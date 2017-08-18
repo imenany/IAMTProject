@@ -39,5 +39,14 @@ class Project extends Model
 		return $this->hasMany('App\Pparticipant');
 	}
 
+    public function getManagerAttribute(){
+        $manager = Pparticipant::with('project')->where('project_id',session('currentProject'))->where('role_id',7)->first()->user;
+        return $manager;
+    }
+
+    public function getLeadassessorAttribute(){
+        $LA = Pparticipant::with('project')->where('project_id',session('currentProject'))->where('role_id',2)->first()->user;
+        return $LA;
+    }
 
 }

@@ -4,7 +4,7 @@
             ISA
       </div>
       <div class="header item" >
-          <h1 id="page_title"></h1>
+          <h3 id="page_title"></h3>
       </div>
       <div class="item right">
         <i class="sort descending icon link" id="show_isa"></i>

@@ -12,6 +12,7 @@ use App\Documentai;
 use App\Missingdoc;
 use App\Baseline;
 use App\Pparticipant;
+use App\Notification;
 use App\Project;
 use Session;
 use App;
@@ -92,10 +93,16 @@ class documentsController extends Controller
                 }
                 
             }
+
+        $manager = Project::where('id',session('currentProject'))->get()->first()->manager;
+        createNotification(Auth::user()->id,$manager->id,Auth::user()->fullname.' uploaded new files','Documents');
+
         }
+
         Session::flash('redirect', 'showuploadFile');
         if(!empty($existingfiles))
-            Session::flash('message', "Files : \n \n \t".implode(" \n\t",$existingfiles)." \n \n has not been uploaded (already exists in this baseline), all the other files has been uploaded, please modify them specify their version and phase");
+            Session::flash('message', "Files : \n \n \t".implode(" \n\t",$existingfiles)." \n \n has not been uploaded (already exists in this baseline), all the other files have been uploaded, please modify them specify their version and phase");
+        else Session::flash('message', "Your files have been uploaded.");
         return back();
     }
 
@@ -114,8 +121,14 @@ class documentsController extends Controller
         else {
             $document->valid = 1;
             $document->save();
+            
+            //createNotification(Auth::user()->id,'client',$document->user->fullname.' has uploaded new document ('.$document->title.')','Documents');
+            createNotification(Auth::user()->id,$document->user_id,Auth::user()->fullname.' has validated your document ('.$document->title.')','Documents');
+
             return "true";
         }
+
+
 
         Session::flash('message', "Document validated");
     }
@@ -125,6 +138,9 @@ class documentsController extends Controller
         $data = $request->all();
 
         $document = Document::where('id',$data['id'])->get()->first();
+
+        createNotification(Auth::user()->id,$document->user_id,Auth::user()->fullname.' has rejected your document ('.$document->title.')','Documents');
+
         $document->forceDelete();
     }
 
@@ -151,9 +167,10 @@ class documentsController extends Controller
         $document = Document::where('id',$request->id)->get()->first();
         $document->version = $request->version;
         $document->phase = $request->phase;
-        $document->user_id = Auth::user()->id;
         $document->valid = 0;
-        
+        $oldTitle = $document->title;
+        $oldURL = $document->url;
+
         if($request->hasfile('file'))
         {   
             Storage::delete($document->url);
@@ -163,14 +180,22 @@ class documentsController extends Controller
             $document->title = $request->file->getClientOriginalName();
         }
         else {
-            $oldTitle = $document->title;
-            $newTitle = $request->title;
-            $oldURL = $document->url;
-            $newURL = str_replace($oldTitle, $newTitle, $oldURL);
-            $document->url = $newURL;
-            $document->title = $request->title;
-            Storage::move($oldURL, $newURL);
+
+
+                $oldTitle = $document->title;
+                $newTitle = $request->title;
+                $oldURL = $document->url;
+                $newURL = str_replace($oldTitle, $newTitle, $oldURL);
+
+                if($document->title != $request->title)
+                    Storage::move($oldURL, $newURL);
+
+                $document->url = $newURL;
+                $document->title = $request->title;
         }
+
+        $manager = Project::where('id',session('currentProject'))->get()->first()->manager;
+        createNotification(Auth::user()->id,$manager->id,$oldTitle.' was modified by '.Auth::user()->fullname,'Documents');
 
         $document->save();
 
@@ -217,9 +242,10 @@ class documentsController extends Controller
         $missingDocument->project_id = session('currentProject');
         $missingDocument->valid = 1;
 
+        $LA = Project::where('id',session('currentProject'))->get()->first()->leadassessor;
+        createNotification(Auth::user()->id,$LA->id,'A missing document alert ('.$missingDocument->title.') was added by '.Auth::user()->fullname,'Documents');
+
         $missingDocument->save();
-
-
     }
 
     public function missingDocAdded(Request $request){
@@ -229,11 +255,13 @@ class documentsController extends Controller
         $missingDocument = Missingdoc::where('id',$data['id'])->get()->first();
         $missingDocument->valid = 0;
 
+        $LA = Project::where('id',session('currentProject'))->get()->first()->leadassessor;
+        createNotification(Auth::user()->id,$LA->id,'Document ('.$missingDocument->title.') has been added and the alert was removed by '.Auth::user()->fullname,'Documents');
+
         $missingDocument->save();
     }
 
     public function getEvaluationStates(Request $req){
-        
         $states = Evaluation::all();
         return $states;
     }   

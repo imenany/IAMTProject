@@ -10,8 +10,8 @@
     @if(Session::has('currentProject'))
            <input type="text" class="hidden" name="projID" value="{{ Session::get('currentProject') }}"/>
     @endif
-    <div class="item">
-      <a href="/"><b>IAMT</b></a>
+    <div class="item logotitle">
+      <a href="/"><img src="{{ URL::asset('/img/viattech.png') }}" height="25px" /></a>
       <a class="ui logo icon image">
             <i class="large align justify icon link" id="hide_menu"></i>
         </a>
@@ -28,30 +28,43 @@
     <div class="item">
       <div class="header"><h3>@lang('strings.notifications')</h3></div>
       <div class="ui middle aligned divided list" id="leftbar_projects">
+        
         <div class='item'>
-          <div class='content'>
-            <div class="right floated content">
+        <a class='header' id='findingsNotifications'>
+          <div class="right floated content">
               <div class="ui small label" id="notif_findings">0</div>
             </div>
-            <a class='header'>@lang('strings.findings')</a>
+          <div class='content'>
+            @lang('strings.findings')
+              <div class="ui fluid popup top left transition visible animating scale out" id="findingsNotificationsPopUp"></div>
           </div>
+          </a>
         </div>
+
         <div class='item'>
+        <a class='header' id='documentsNotifications'>
           <div class="right floated content">
               <div class="ui small label" id="notif_docs">0</div>
             </div>
           <div class='content'>
-            <a class='header' href="{{ url('/validateDocs') }}">@lang('strings.documents')</a>
+            @lang('strings.documents')
+              <div class="ui fluid popup top left transition visible animating scale out" id="documentsNotificationsPopUp"></div>
           </div>
+          </a>
         </div>
+
         <div class='item'>
+        <a class='header' id='reviewsNotifications'>
           <div class="right floated content">
               <div class="ui small label" id="notif_review">0</div>
-          </div>
+            </div>
           <div class='content'>
-            <a class='header'>@lang('strings.reviewing')</a>
+            @lang('strings.reviewing')
+              <div class="ui fluid popup top left transition visible animating scale out" id="reviewsNotificationsPopUp"></div>
           </div>
+          </a>
         </div>
+
       </div>
     </div>
     

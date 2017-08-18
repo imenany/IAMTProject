@@ -1,11 +1,6 @@
 <div class="ui grid" >
 	<div class="wide column">
-		<div class="ui hidden" id="Saving">
-	  		<div class="ui active inverted dimmer">
-	    		<div class="ui large text loader"><i class="save icon"></i>@lang('strings.Saving')</div>
-	  		</div>
-  			<p></p>
-		</div>
+
 		<table class="ui celled table datatable" id="BaselinesLockTable">
 			<thead>
 			<tr>

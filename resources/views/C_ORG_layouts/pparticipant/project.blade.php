@@ -16,20 +16,19 @@
     
     @yield('styles')
 
-    <title>IAMT - @yield('title')</title>
+    <title>IAMT - Assessement tool</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 </head>
 <body>
-        @include('_chat_layout')
-
-
         @include('C_ORG_layouts._leftmenu_layout')
         @include('C_ORG_layouts._usermenu_layout')
         @include('C_ORG_layouts.pparticipant._docmanager_layout')
         @include('C_ORG_layouts.pparticipant._isa_layout')
         @include('_modals_layout')
+        @include('_chat_layout')
+
         <div id="redirect" hidden>@if(\Session::has('redirect')) {{session('redirect')}} @endif</div>
         <div id="pagemessage" hidden>@if(\Session::has('message')) {{session('message')}} @endif</div>
 </body>

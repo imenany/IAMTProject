@@ -16,7 +16,7 @@
             <textarea rows="1" style="background: #D9E8F5;border-radius: 0; font-size: 9pt" id="Message"></textarea>
           </div>
           <div class="three wide field">
-            <div class="fluid tiny yellow ui button" id="addMessage">
+            <div class="fluid tiny blue ui button" id="addMessage">
                <i class="send icon"></i>
             </div>
           </div>

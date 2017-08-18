@@ -21,7 +21,8 @@
     $('.datatable').DataTable({
       "pageLength": 5,
       "lengthMenu": [ 5, 10, 15 ],
-      "bDestroy": true
+      "bDestroy": true,
+      "autoWidth": false
     });
 
     $('.expand').click(function(event) {

@@ -10,6 +10,7 @@ use App\Document;
 use App\Baseline;
 use App\Pparticipant;
 use App\Project;
+use App\Notification;
 use Session;
 use App;
 use Auth;
@@ -42,7 +43,10 @@ class baselineController extends Controller
 
     public function lockBaseline()
     {
-    	Baseline::where('project_id',session('currentProject'))->where('status','opened')->update(['status' => 'locked']);
+        $baseline = Baseline::where('project_id',session('currentProject'))->where('status','opened');
+    	$baseline->update(['status' => 'locked']);
+        createNotification(Auth::user()->id,'all','Baseline version : '.$baseline->get()->first()->version.' has been locked by '.Auth::user()->fullname.'.','Documents');
+
     }
 
     public function createBaseline(Request $request)
@@ -83,6 +87,8 @@ class baselineController extends Controller
         }
         if(!empty($files))
             Session::flash('message', "Files : \n \n \t".implode(" \n\t",$files)." \n \n has no version, please modify them specify their version and phase");
+        
+        createNotification(Auth::user()->id,'all','Baseline version : '.$new_baseline->version.' has been created by '.Auth::user()->fullname.'.','Documents');
 
         Session::flash('redirect', 'showallBaselines');
 
@@ -133,6 +139,8 @@ class baselineController extends Controller
             }
         }
 
+        createNotification(Auth::user()->id,'all','Baseline version : '.$new_baseline->version.' has been created by '.Auth::user()->fullname.'.','Documents');
+
         if(!empty($files))
             Session::flash('message', "Files : \n \n \t".implode(" \n\t",$files)." \n \n has not been updated!");
 
@@ -166,6 +174,9 @@ class baselineController extends Controller
         $baseline = Baseline::where('id',$id)->get()->first();
         $baseline->status = "closed";
         $baseline->save();
+
+        createNotification(Auth::user()->id,'all','Baseline version : '.$new_baseline->version.' has been closed by '.Auth::user()->fullname.'.','Documents');
+
         
         return $id;
 
@@ -180,6 +191,8 @@ class baselineController extends Controller
         $baseline->status = "opened";
         $baseline->save();
         
+        createNotification(Auth::user()->id,'all','Baseline version : '.$new_baseline->version.' has been opened by '.Auth::user()->fullname.'.','Documents');
+
         return $id;
 
     }
