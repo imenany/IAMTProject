@@ -19,7 +19,6 @@
           </thead>
         <tbody>
         @foreach($findings as $finding)
-          @if($finding->valid == 1)
             <tr>
             	<td> <input type="checkbox" name="finding[{{$finding->last()->id}}]"></td>
                 <td> {{$finding->last()->finding}} </td>
@@ -33,7 +32,6 @@
                 <td> {{$finding->last()->user->first_name}} {{$finding->last()->user->last_name}} </td>
                 <td> {{$finding->last()->updated_at}} </td>
             </tr>
-          @endif
         @endforeach
         </tbody>
       </table>

@@ -86,7 +86,7 @@ class RobsController extends Controller
 
         if($data['user'] == "projectmanager")
         {
-            $document->approver = 1;
+            $document->projectmanager = 1;
             createNotification(Auth::user()->id,'ia','[ISA] Document '.$document->title.' has been reviewed and validated by '.Auth::user()->fullname.'.','Reviewing');
         }elseif($data['user'] == "approver")
         {

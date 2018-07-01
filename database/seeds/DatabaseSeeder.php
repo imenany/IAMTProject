@@ -12,11 +12,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         //factory(App\User::class,9)->create();
-        //factory(App\Project::class,9)->create();
+        factory(App\Project::class,9)->create();
         //factory(App\Baseline::class,9)->create();
 
-        //$this->call(RolesTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
         $this->call(NormesTableSeeder::class);
-        //$this->call(EvaluationsTableSeeder::class);
+        $this->call(EvaluationsTableSeeder::class);
     }
 }

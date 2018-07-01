@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNotificationsTable.php extends Migration
+class CreateNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,8 +16,9 @@ class CreateNotificationsTable.php extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('reponsable');
+            $table->integer('responsable');
             $table->text('notification');
+            $table->text('type');
             $table->integer('project_id');
             $table->boolean('seen');
             //Where to go

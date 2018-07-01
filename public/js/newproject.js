@@ -206,25 +206,25 @@ $(document).on('change paste keyup', '#organisation_name', function(event) {
 
 $('#submitform').click(function(event) {
 
-  $countLA = 0;
-  $countPM = 0;
-  $countApprover = 0;
+  countLA = 0;
+  countPM = 0;
+  countApprover = 0;
   $("input[name^='role']").each(function() {
      var element = $(this).parent().checkbox('is checked');
      if (element && $(this).val() == "Lead Assessor") {
-         $countLA += 1;
+         countLA += 1;
      }else if (element && $(this).val() == "Project Manager") {
-         $countPM += 1;
+         countPM += 1;
      }else if (element && $(this).val() == "Approver") {
-         $countApprover += 1;
+         countApprover += 1;
      }
   });
   if ($('#organisation_name').val() == "") {
       alert('Please select an organisation for this project.');
   }
-  else if($countLA < 1)
+  else if(countLA < 1)
     alert("You must select a Lead Assessor");
-  else if($countPM > 1 || $countApprover > 1 || countLA > 1 )
+  else if(countPM > 1 || countApprover > 1 || countLA > 1 )
     alert("You must select one and only one Lead Assessor / Project Manager / Approver");
   else {
         if (confirm('Are you sure you want to create this project? ')) {
