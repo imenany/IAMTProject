@@ -34,13 +34,16 @@ class RobsController extends Controller
     public function getGenerateROBSView(){
         $findings = Finding::where('project_id',session('currentProject'))->orderBy('created_at','asc')->get();
         $findings = $findings->groupby('finding');
-        return getRoleAndSet('isaMan.generateROBS','findings',$findings);
+        $currentbaseline = Baseline::where('id',session('currentBaseline'))->get()->first();
+        if($currentbaseline->status == 'locked')
+            return getRoleAndSet('isaMan.generateROBS','findings',$findings);
+        else 
+            return 'You can\'t generate ROBS, the current baseline is not locked by the client';
     }
 
 
     public function getallROBSView(){
         $ROBS = Documentai::where('baseline_id',session('currentBaseline'))->get();
-
         return getRoleAndSet('isaMan.cycleReview','ROBS',$ROBS);
     }
 
