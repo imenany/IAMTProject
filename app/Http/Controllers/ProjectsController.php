@@ -14,7 +14,6 @@ use App\Normesphase;
 use App\NormesAssignement;
 use App\Message;
 use App\Notification;
-use Barryvdh\Debugbar\Facade as Debugbar;
 
 
 class ProjectsController extends Controller
@@ -81,12 +80,8 @@ class ProjectsController extends Controller
         {
             $curbl = $lastbl[0]->id;
             session(['currentBaseline' => $curbl]);
-        } else {
-            $curbl = Baseline::where('project_id',session('currentProject'))->orderBy('updated_at', 'DESC')->first()->id;
-            Debugbar::info($curbl);
-
-            session(['currentBaseline' => $curbl]);
-        }
+        } else session(['currentBaseline' => '0.0']);
+        
         return getRoleAndSet('.project','data',null);
 
     }
